@@ -20,20 +20,6 @@ def edge_compute(x):
     y /= 4
     return y
 
-default_params = {
-    'in_c': 4,
-    'out_c': 3,
-    'only_residual': False,
-}
-
-def get_weights_and_params(task, params):
-    if task == 'dehaze':
-        weights = os.path.join('GCANetModel','dehaze.pth')
-        params['only_residual'] = True
-    elif task == 'derain':
-        weights = os.path.join('GCANetModel', 'derain.pth')
-    return weights, params
-
 def gcanProcess(src_image, task):
     # model config
     if task == 'dehaze':
