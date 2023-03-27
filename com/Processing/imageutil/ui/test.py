@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QS
     QLineEdit, QMessageBox
 
 from com.Processing.imageutil.control.GCANetUtil import gcanProcess
+from com.Processing.imageutil.control.test import deblurring
 from com.Processing.imageutil.ui.CustomLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
 
@@ -1170,6 +1171,7 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         self.__current_img = img_process(self.__current_img, "deblurring")
+        # self.__current_img = deblurring(self.__current_img, "deblurring")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()

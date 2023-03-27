@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="105273e0-b0fd-478a-97f3-9079390b65a7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/com/Processing/imageutil/MirnetModel/deblurring.pth" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/com/Processing/imageutil/control/MirnetUtil.py" beforeDir="false" afterPath="$PROJECT_DIR$/com/Processing/imageutil/control/MirnetUtil.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/com/Processing/imageutil/ui/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/com/Processing/imageutil/ui/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,7 +42,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/shaoyifei/Documents/Y4/FYP/git/Deep-Learning-Based-Image-Enhancement-Framework&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/shaoyifei/Documents/Y4/FYP/git/Deep-Learning-Based-Image-Enhancement-Framework/com/Processing/imageutil/MirnetModel&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -47,6 +50,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/com/Processing/imageutil/MirnetModel" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Deep-Learning-Based-Image-Enhancement-Framework" />
@@ -90,6 +98,10 @@
       <workItem from="1679294515728" duration="539000" />
       <workItem from="1679295676286" duration="802000" />
       <workItem from="1679319921696" duration="3045000" />
+      <workItem from="1679834322597" duration="5000" />
+      <workItem from="1679835899144" duration="7950000" />
+      <workItem from="1679848365029" duration="896000" />
+      <workItem from="1679849297468" duration="1811000" />
     </task>
     <servers />
   </component>
@@ -97,6 +109,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Deep_Learning_Based_Image_Enhancement_Framework$Main.coverage" NAME="Main Coverage Results" MODIFIED="1679295715768" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/com/Processing/imageutil" />
+    <SUITE FILE_PATH="coverage/Deep_Learning_Based_Image_Enhancement_Framework$Main.coverage" NAME="Main Coverage Results" MODIFIED="1679850800363" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/com/Processing/imageutil" />
   </component>
 </project>
