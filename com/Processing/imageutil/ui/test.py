@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QS
     QLineEdit, QMessageBox
 
 from com.Processing.imageutil.control.GCANetUtil import gcanProcess
+from com.Processing.imageutil.control.test import deblurring
 from com.Processing.imageutil.ui.CustomLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
 
@@ -996,8 +997,6 @@ class MainWindow(object):
         self.action = QtWidgets.QAction(MainWindow)
         self.action.setObjectName("action")
 
-        # self.retranslateUi(MainWindow)
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "ImageUtil"))
@@ -1006,8 +1005,10 @@ class MainWindow(object):
         self.btn_undo.setText(_translate("MainWindow", "undo"))
         self.btn_confirm.setText(_translate("MainWindow", "confirm"))
         self.btn_cancel.setText(_translate("MainWindow", "cancel"))
-        self.btn_contrast.setText(_translate("MainWindow", "contrast enhance"))
-        self.btn_lol.setText(_translate("MainWindow", "lowlight enhance"))
+        self.btn_contrast.setText(_translate("MainWindow", "dehaze"))
+        self.btn_lol.setText(_translate("MainWindow", "derain"))
+        # self.btn_contrast.setText(_translate("MainWindow", "contrast enhance"))
+        # self.btn_lol.setText(_translate("MainWindow", "lowlight enhance"))
         self.btn_denoising.setText(_translate("MainWindow", "denoising"))
         self.btn_deblurring.setText(_translate("MainWindow", "deblurring"))
         self.btn_sr.setText(_translate("MainWindow", "super resolution"))
@@ -1147,7 +1148,8 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "lowlight_enhancement")
+        # self.__current_img = img_process(self.__current_img, "lowlight_enhancement")
+        self.__current_img = gcanProcess(self.__current_img, "derain")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
@@ -1170,6 +1172,7 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         self.__current_img = img_process(self.__current_img, "deblurring")
+        # self.__current_img = deblurring(self.__current_img, "deblurring")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()

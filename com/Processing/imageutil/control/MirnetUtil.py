@@ -20,6 +20,19 @@ default_params = {
     'task': None
 }
 
+deblur_params = {
+    'inp_channels':3,
+    'out_channels':3,
+    'dim':48,
+    'num_blocks':[4,6,6,8],
+    'num_refinement_blocks':4,
+    'heads':[1,2,4,8],
+    'ffn_expansion_factor':2.66,
+    'bias':False,
+    'LayerNorm_type':'WithBias',
+    'dual_pixel_task':False
+}
+
 
 def load_img(img_src):
     return cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
@@ -38,8 +51,9 @@ def get_weights_and_params(task, params):
         weights = os.path.join('MirnetModel', 'sr_x4.pth')
         params['scale'] = 4
     elif task == 'deblurring':
-        weights = os.path.join('MirnetModel', 'deblurring.pth')
-        params['']
+        # weights = os.path.join('MirnetModel', 'deblurring.pth')
+        weights = './MirnetModel/deblurring.pth'
+        return weights, params
     params['task'] = task
     return weights, params
 
@@ -47,71 +61,75 @@ def img_process(src_img, task):
     tile_default = None
     tile_overlap_default = 32
 
-    weights, params = get_weights_and_params(task, default_params)
-    print(params)
+    if task == 'deblurring':
+        weights, params = get_weights_and_params(task, deblur_params)
+        load_arch = run_path('./MirnetModel/restormer_arch.py')
+        model = load_arch['Restormer'](**params)
+        img_multiple_of = 8
+    else:
+        weights, params = get_weights_and_params(task, default_params)
+        load_arch = run_path('./MirnetModel/mirnet_v2_arch.py')
+        model = load_arch['MIRNet_v2'](**params)
+        # use for completion
+        img_multiple_of = 4
 
-    load_arch = run_path('./MirnetModel/mirnet_v2_arch.py')
-    model = load_arch['MIRNet_v2'](**params)
-
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('mps')
     model.to(device)
 
     checkpoint = torch.load(weights)
     model.load_state_dict(checkpoint['params'])
-
     model.eval()
+    with torch.no_grad():
+        temp_img = load_img(src_img)
+        input_ = torch.from_numpy(temp_img).float().div(255.).permute(2,0,1).unsqueeze(0).to(device)
 
-    # use for completion
-    img_multiple_of = 4
+        height, width = input_.shape[2], input_.shape[3]
 
-    temp_img = load_img(src_img)
-    input_ = torch.from_numpy(temp_img).float().div(255.).permute(2,0,1).unsqueeze(0).to(device)
+        H, W = ((height + img_multiple_of)//img_multiple_of)*img_multiple_of, ((width+img_multiple_of)//img_multiple_of)*img_multiple_of
 
-    height, width = input_.shape[2], input_.shape[3]
+        padH = H-height if height%img_multiple_of != 0 else 0
+        padW = W-width if width%img_multiple_of != 0 else 0
 
-    H, W = ((height + img_multiple_of)//img_multiple_of)*img_multiple_of, ((width+img_multiple_of)//img_multiple_of)*img_multiple_of
+        input_ = F.pad(input_, (0, padW, 0, padH), 'reflect')
 
-    padH = H-height if height%img_multiple_of != 0 else 0
-    padW = W-width if width%img_multiple_of != 0 else 0
+        print("1")
+        if tile_default is None:
+            restored = model(input_)
+        else:
+            b, c, h, w = input_.shape
+            tile = min(tile_default, h, w)
 
-    input_ = F.pad(input_, (0, padW, 0, padH), 'reflect')
+            assert tile % img_multiple_of == 0, "tile size should be multiple of 4 or 8"
+            tile_overlap = tile_overlap_default
 
-    if tile_default is None:
-        restored = model(input_)
-    else:
-        b, c, h, w = input_.shape
-        tile = min(tile_default, h, w)
+            stride = tile - tile_overlap
+            h_idx_list = list(range(0, h-tile, stride)) + [h-tile]
+            w_idx_list = list(range(0, w-tile, stride)) + [w-tile]
+            E = torch.zeros(b, c, h, w).type_as(input_)
+            W = torch.zeros_like(E)
 
-        assert tile % 4 == 0, "tile size should be multiple of 4"
-        tile_overlap = tile_overlap_default
+            for h_idx in h_idx_list:
+                for w_idx in w_idx_list:
+                    in_patch = input_[..., h_idx:h_idx + tile, w_idx:w_idx + tile]
+                    out_patch = model(in_patch)
+                    out_patch_mask = torch.ones_like(out_patch)
 
-        stride = tile - tile_overlap
-        h_idx_list = list(range(0, h-tile, stride)) + [h-tile]
-        w_idx_list = list(range(0, w-tile, stride)) + [w-tile]
-        E = torch.zeros(b, c, h, w).type_as(input_)
-        W = torch.zeros_like(E)
+                    E[..., h_idx:(h_idx + tile), w_idx:(w_idx + tile)].add_(out_patch)
+                    W[..., h_idx:(h_idx + tile), w_idx:(w_idx + tile)].add_(out_patch_mask)
+            restored = E.div_(W)
 
-        for h_idx in h_idx_list:
-            for w_idx in w_idx_list:
-                in_patch = input_[..., h_idx:h_idx + tile, w_idx:w_idx + tile]
-                out_patch = model(in_patch)
-                out_patch_mask = torch.ones_like(out_patch)
+        restored = torch.clamp(restored, 0, 1)
 
-                E[..., h_idx:(h_idx + tile), w_idx:(w_idx + tile)].add_(out_patch)
-                W[..., h_idx:(h_idx + tile), w_idx:(w_idx + tile)].add_(out_patch_mask)
-        restored = E.div_(W)
+        restored = restored[:,:,:height,:width]
 
-    restored = torch.clamp(restored, 0, 1)
+        # unpad output
+        restored = restored.permute(0, 2, 3, 1).cpu().detach().numpy()
+        restored = img_as_ubyte(restored[0])
 
-    restored = restored[:,:,:height,:width]
-
-    # unpad output
-    restored = restored.permute(0, 2, 3, 1).cpu().detach().numpy()
-    restored = img_as_ubyte(restored[0])
-
-    print("finish")
-    final = save_img(restored)
-    return final
+        print("finish")
+        final = save_img(restored)
+        return final
 
 
 
