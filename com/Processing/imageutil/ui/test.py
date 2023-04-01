@@ -1048,6 +1048,7 @@ class MainWindow(object):
         frame = QImage(img.data.tobytes(), x, y, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
         pix = QPixmap.fromImage(frame)
         self.img_panel.setPixmap(pix)
+        self.img_panel.setFixedSize(pix.width(), pix.height())
         self.img_panel.repaint()
 
 
