@@ -55,7 +55,7 @@
       <widget class="QFrame" name="operation">
        <property name="minimumSize">
         <size>
-         <width>800</width>
+         <width>1000</width>
          <height>39</height>
         </size>
        </property>
@@ -175,6 +175,38 @@
           </property>
           <property name="text">
            <string>Undo</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_cutting">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Cutting</string>
           </property>
          </widget>
         </item>

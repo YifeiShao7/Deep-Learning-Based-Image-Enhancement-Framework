@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import copy
 
-import cv2
 # Form implementation generated from reading ui file 'version0402.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
@@ -11,43 +9,13 @@ import cv2
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import copy
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor
-from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \
-    QLineEdit, QMessageBox
-from com.Processing.imageutil.control.GCANetUtil import gcanProcess
-from com.Processing.imageutil.ui.CustomLabel import ImageLabel
-from com.Processing.imageutil.control.MirnetUtil import *
-from com.Processing.imageutil.control.BasicUtil import *
 
-class MainWindow(object):
+
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1029, 774)
         MainWindow.setMinimumSize(QtCore.QSize(1029, 774))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        MainWindow.setFont(font)
-
-        self.create_widget(MainWindow)
-
-        self.retranslateUi(MainWindow)
-
-        self.__current_img = None
-        self.__original_img = None  # origin image
-        self.__last_img = None  # last step of operation
-        self.__current_operation = None  # current operation record
-        self.__temp_img = None
-
-        self.__undoList = []
-        # index is in range of 0-10
-        self.__index = 0
-        self.__origin_count = 1
-
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def create_widget(self, MainWindow):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.title = QtWidgets.QFrame(self.centralwidget)
@@ -223,6 +191,8 @@ class MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -246,182 +216,3 @@ class MainWindow(object):
         self.btn_zoom.setText(_translate("MainWindow", "Zoom"))
         self.btn_rotate.setText(_translate("MainWindow", "Rotate"))
         self.btn_mirror.setText(_translate("MainWindow", "Mirror"))
-
-    @QtCore.pyqtSlot()
-    def on_btn_open_clicked(self):
-        """
-        On click event of "open" button
-        """
-        img_name, img_type = QFileDialog.getOpenFileName(self, "Open the image", "", "*.png;;*.jpg;;*.jpeg;;*.bmp")
-        if (img_name == "") or (img_name is None):
-            self.__show_warning_message_box("Please Select Image")
-            return
-
-        img = cv2.imread(img_name)
-
-        # Initialize the history records
-        self.showImage(img)
-        self.__current_img = img
-        self.__last_img = self.__current_img
-        self.__original_img = copy.deepcopy(self.__current_img)
-        self.__original_img_path = img_name
-
-    def showImage(self, img, is_grayscale=False):
-        print("show")
-        x = img.shape[1]  # get image shape
-        y = img.shape[0]
-        self.zoomscale = 1  # image zoom scale
-        bytesPerLine = 3 * x
-
-        if len(img.shape) == 2:  # if input image is grey-scale, turns to 3-channels
-            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-
-        frame = QImage(img.data.tobytes(), x, y, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        pix = QPixmap.fromImage(frame)
-        self.img_panel.setPixmap(pix)
-        self.img_panel.setFixedSize(pix.width(), pix.height())
-        self.img_panel.repaint()
-
-
-    def __show_warning_message_box(self, msg):
-        QMessageBox.warning(self, "Warning", msg, QMessageBox.Ok)
-
-    def __show_info_message_box(self, msg):
-        QMessageBox.information(self, "Note", msg, QMessageBox.Ok)
-
-    @QtCore.pyqtSlot()
-    def on_btn_save_clicked(self):
-        """
-        On click event of "Save" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-
-        ext_name = self.__original_img_path[self.__original_img_path.rindex("."):]
-        img_path, img_type = QFileDialog.getSaveFileName(self, "Save Image", self.__original_img_path, "*" + ext_name)
-        if (img_path != "" and img_type != ""):
-            cv2.imwrite(img_path + '.png', self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_undo_clicked(self):
-        """
-        On click event of "Undo" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Please Select Image")
-            return
-
-        self.__current_img = self.__original_img
-        self.__last_img = self.__current_img
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_contrast_clicked(self):
-        """
-                On click event of "Contrast" button
-                """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        # self.__current_img = adjust_contrast(self.__current_img, 0)
-        self.__current_img = img_process(self.__current_img, "contrast_enhancement")
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_lol_clicked(self):
-        """
-        On click event of "low light enhancement" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = img_process(self.__current_img, "lowlight_enhancement")
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_denoise_clicked(self):
-        """
-        On click event of "denoising" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = img_process(self.__current_img, "real_denoising")
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_deblur_clicked(self):
-        """
-        On click event of "deblurring" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = img_process(self.__current_img, "deblurring")
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_sr_clicked(self):
-        """
-        On click event of "low light enhancement" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = img_process(self.__current_img, "super_resolution")
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_dehaze_clicked(self):
-        """
-        On click event of "Contrast" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = gcanProcess(self.__current_img, "dehaze")
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_derain_clicked(self):
-        """
-        On click event of "Contrast" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = gcanProcess(self.__current_img, "derain")
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_rotate_clicked(self):
-
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = rotate_transfer(self.__current_img, 3)
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_mirror_clicked(self):
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-        self.__current_img = mirror_transfer(self.__current_img, 1)
-        self.showImage(self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_origin_clicked(self):
-        if self.__current_img is None:
-            self.__show_warning_message_box("Haven't Select Image")
-            return
-
-        if self.__origin_count == 1:
-            self.btn_origin.setText("Newest")
-            self.showImage(self.__original_img)
-        elif self.__origin_count == -1:
-            self.btn_origin.setText("Origin")
-            self.showImage(self.__current_img)
-        self.__origin_count = self.__origin_count * -1
-
