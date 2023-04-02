@@ -53,5 +53,4 @@ def gcanProcess(src_image, task):
     else:
         out_img = pred.data[0].cpu().float().round().clamp(0, 255)
     output = np.asarray(Image.fromarray(out_img.numpy().astype(np.uint8).transpose(1, 2, 0)))
-    print('GCAN finish')
     return output

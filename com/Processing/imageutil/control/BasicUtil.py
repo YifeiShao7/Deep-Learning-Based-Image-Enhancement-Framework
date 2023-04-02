@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import PIL.Image as img
 
 """
 Cutting the image
@@ -48,8 +49,40 @@ Adjust image to specified ratio of contrast
 def adjust_contrast(src_image, contrast_value):
     h, w, c = src_image.shape
 
-    contrast_ratio = 1.5 + contrast_value/100
+    contrast_ratio = (contrast_value+100.0)/100.0
 
-    empty_img = np.zeros([h,w,c], src_image.dtype)
-    cmb_img = cv2.addWeighted(src_image, contrast_ratio, empty_img, 1-contrast_ratio, 0)
+    blank_img = np.zeros([h,w,c], src_image.dtype)
+    cmb_img = cv2.addWeighted(src_image, contrast_ratio, blank_img, 1-contrast_ratio, 1)
     return cmb_img
+
+"""
+Rotate the image to three kinds of form: 90degree clockwise(1), -90degree clockwise(2), 180degree(3)
+:param src_img: origin image
+:param transfer kind
+:return: transformed image
+"""
+def rotate_transfer(src_img, type):
+    if type == 1:
+        result = np.rot90(src_img, -1)
+        return result
+    elif type == 2:
+        result = np.rot90(src_img, 1)
+        return result
+    elif type == 3:
+        result = np.rot90(src_img, -1)
+        result = np.rot90(result, -1)
+        return result
+
+"""
+Mirror the image to two kinds of form: horizontal mirror(1), vertical mirror(2)
+:param src_img: origin image
+:param transfer kind
+:return transformed image
+"""
+def mirror_transfer(src_img, type):
+    if type == 1:
+        result = cv2.flip(src_img, 1)
+    elif type == 2:
+        result = cv2.flip(src_img, 0)
+    return result
+

@@ -16,11 +16,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor
 from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \
     QLineEdit, QMessageBox
-
 from com.Processing.imageutil.control.GCANetUtil import gcanProcess
 from com.Processing.imageutil.ui.CustomLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
-
+from com.Processing.imageutil.control.BasicUtil import *
 
 class MainWindow(object):
     def setupUi(self, MainWindow):
@@ -39,6 +38,12 @@ class MainWindow(object):
         self.__original_img = None  # origin image
         self.__last_img = None  # last step of operation
         self.__current_operation = None  # current operation record
+        self.__temp_img = None
+
+        self.__undoList = []
+        # index is in range of 0-10
+        self.__index = 0
+        self.__origin_count = 1
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -311,6 +316,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
+        # self.__current_img = adjust_contrast(self.__current_img, 0)
         self.__current_img = img_process(self.__current_img, "contrast_enhancement")
         self.showImage(self.__current_img)
 
@@ -379,3 +385,40 @@ class MainWindow(object):
             return
         self.__current_img = gcanProcess(self.__current_img, "derain")
         self.showImage(self.__current_img)
+
+    @QtCore.pyqtSlot()
+    def on_btn_rotate_clicked(self):
+
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+        self.__current_img = rotate_transfer(self.__current_img, 3)
+        self.showImage(self.__current_img)
+
+    @QtCore.pyqtSlot()
+    def on_btn_mirror_clicked(self):
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+        self.__current_img = mirror_transfer(self.__current_img, 1)
+        self.showImage(self.__current_img)
+
+    @QtCore.pyqtSlot()
+    def on_btn_origin_clicked(self):
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+
+        if self.__origin_count == 1:
+            self.btn_origin.setText("Newest")
+            self.showImage(self.__original_img)
+        elif self.__origin_count == -1:
+            self.btn_origin.setText("Origin")
+            self.showImage(self.__current_img)
+        self.__origin_count = self.__origin_count * -1
+
+        # self.__temp_img = self.__current_img
+        # self.__current_img = self.__original_img
+        # self.__original_img = self.__temp_img
+
+        # self.showImage(self.__current_img)
