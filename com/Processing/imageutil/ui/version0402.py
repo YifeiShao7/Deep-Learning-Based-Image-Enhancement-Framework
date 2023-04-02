@@ -135,7 +135,8 @@ class MainWindow(object):
         self.frame_4.setObjectName("frame_4")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.frame_4)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.img_panel = QtWidgets.QLabel(self.frame_4)
+        # self.img_panel = QtWidgets.QLabel(self.frame_4)
+        self.img_panel = ImageLabel(self.frame_4)
         self.img_panel.setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(218, 218, 218)")
         self.img_panel.setText("")
         self.img_panel.setObjectName("img_panel")
@@ -425,3 +426,36 @@ class MainWindow(object):
             self.showImage(self.__current_img)
         self.__origin_count = self.__origin_count * -1
 
+    @QtCore.pyqtSlot()
+    def on_btn_cutting_clicked(self):
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+
+        self.__show_info_message_box("Click Confirm button to ensure your modification")
+        self.__current_operation = "clip"
+        self.img_panel.flag = True
+        self.img_panel.setCursor(Qt.CrossCursor)
+
+    @QtCore.pyqtSlot()
+    def on_btn_confirm_clicked(self):
+        if self.__current_operation == "clip":
+            x_start, x_end = self.img_panel.img_x_start, self.img_panel.img_x_end
+            y_start, y_end = self.img_panel.img_y_start, self.img_panel.img_y_end
+            self.__current_img = crop_image(self.__current_img, x_start, x_end, y_start, y_end)
+            self.showImage(self.__current_img)
+
+            self.img_panel.clearRect()
+            self.img_panel.flag = False
+        self.__last_img = self.__current_img
+
+        self.__current_operation = None
+    @QtCore.pyqtSlot()
+    def on_btn_cancel_clicked(self):
+        if self.__current_operation == "clip":
+            self.img_panel.clearRect()
+            self.img_panel.flag = False
+        self.__current_img = self.__last_img
+        self.showImage(self.__current_img)
+
+        self.__current_operation = None

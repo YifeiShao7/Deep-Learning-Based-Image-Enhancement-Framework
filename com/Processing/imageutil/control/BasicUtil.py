@@ -86,3 +86,17 @@ def mirror_transfer(src_img, type):
         result = cv2.flip(src_img, 0)
     return result
 
+"""
+Clip the image to specific size
+:param src_img:
+:param x_start:
+:param x_end:
+:param y_start:
+:param y_end:
+:return changed image
+"""
+def crop_image(src_img, x_start, x_end, y_start, y_end):
+    tmp_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    tmp_img = tmp_img[y_start:y_end, x_start:x_end]  # width, height
+    return cv2.cvtColor(tmp_img, cv2.COLOR_RGB2BGR)
+
