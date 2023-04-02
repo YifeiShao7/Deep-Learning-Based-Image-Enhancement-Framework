@@ -231,7 +231,7 @@ class MainWindow(object):
         self.btn_save.setText(_translate("MainWindow", "Save"))
         self.btn_redo.setText(_translate("MainWindow", "Redo"))
         self.btn_undo.setText(_translate("MainWindow", "Undo"))
-        self.btn_cutting.setText(_translate("MainWindow", "Cutting"))
+        self.btn_cutting.setText(_translate("MainWindow", "Clip"))
         self.btn_confirm.setText(_translate("MainWindow", "Confirm"))
         self.btn_cancel.setText(_translate("MainWindow", "Cancel"))
         self.btn_origin.setText(_translate("MainWindow", "Origin"))
