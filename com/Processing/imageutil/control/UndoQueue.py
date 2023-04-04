@@ -8,6 +8,7 @@ SAVE_DIRECTORY = './control/tempFile/'
 
 
 def add_img(src_img, queue, index):
+    # print(index)
     tempQueue = Queue(maxsize=10)
     tempQueue = queue
 
@@ -16,22 +17,22 @@ def add_img(src_img, queue, index):
     if tempQueue.qsize() == 0:
         saveIndex = 0
     else:
-        match = tempQueue.queue[tempQueue.qsize()]
-        saveIndex = match + 1
+        match = tempQueue.queue[tempQueue.qsize()-1]
+        saveIndex = int(match) + 1
 
-    # 如果就是从queue的末尾开始加内容
-    if tempQueue.qsize() == index:
+    # when the cursor is on the newest one
+    if index == 0:
         # if length < 10, add one item into it
         # 当没存满的时候，保存图片，然后将图片的saveIndex存到queue中
         if tempQueue.qsize() < 9:
             saveName = SAVE_DIRECTORY + 'temp_' + str(saveIndex) + '.png'
             cv2.imwrite(saveName, src_img)
             tempQueue.put(str(saveIndex))
-            index += 1
-        # add a new item before remove one
-        if tempQueue.qsize() == 9:
+            index = 0
+        elif tempQueue.qsize() == 9:
             #         remove item
             deleteIndex = tempQueue.get()
+            print("deleteindex", deleteIndex)
             deletePath = SAVE_DIRECTORY + 'temp_' + str(deleteIndex) + '.png'
             os.remove(deletePath)
 
@@ -39,35 +40,40 @@ def add_img(src_img, queue, index):
             saveName = SAVE_DIRECTORY + 'temp_' + str(saveIndex) + '.png'
             cv2.imwrite(saveName, src_img)
             tempQueue.put(str(saveIndex))
-            index = 9
-    # 如果之前undo过，从中间开始加内容
-    elif tempQueue.qsize() > index:
-# 先把多出来的几条东西删掉
+            index = 0
+    #         when the cursor is not on the newest one (have undo operations)
+    elif index > 0:
         newQueue = Queue(maxsize=10)
+        transfer_num = tempQueue.qsize() - index
         while tempQueue.empty() == 0:
-            if index > 0:
+            # the first several content should be trasnfer into a new queue
+            if transfer_num > 0:
+                transfer_num -= 1;
                 temp = tempQueue.get()
                 newQueue.put(temp)
+            #     the rest should delete
             else:
                 deletePath = SAVE_DIRECTORY + 'temp_' + str(tempQueue.get()) + '.png'
                 os.remove(deletePath)
-            index -= 1
 
         index = newQueue.qsize()
         tempQueue = newQueue
-
+    print("size&index:", tempQueue.qsize(), index)
     return tempQueue, index
 
 # 在redo中，index应该要小于queue的长度
 def redo(queue, index):
     tempQueue = Queue(maxsize=10)
     tempQueue = queue
-    index += 1
+    index -= 1
 
-    contentIndex = tempQueue.queue[index]
+    contentIndex = tempQueue.queue[tempQueue.qsize() - index - 1]
     contentName = SAVE_DIRECTORY + 'temp_' + str(contentIndex) + '.png'
 
     src_img = cv2.imread(contentName, cv2.IMREAD_COLOR)
+
+    print("redo:", index)
+    print("contentIndex:", contentIndex)
 
     return src_img, index
 
@@ -75,9 +81,9 @@ def redo(queue, index):
 def undo(queue, index):
     tempQueue = Queue(maxsize=10)
     tempQueue = queue
-    index -= 1
+    index += 1
 
-    contentIndex = tempQueue.queue[index]
+    contentIndex = tempQueue.queue[tempQueue.qsize() - index - 1]
     contentName = SAVE_DIRECTORY + 'temp_' + str(contentIndex) + '.png'
 
     src_img = cv2.imread(contentName, cv2.IMREAD_COLOR)

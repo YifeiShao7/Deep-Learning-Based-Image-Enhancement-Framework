@@ -20,6 +20,7 @@ from com.Processing.imageutil.control.GCANetUtil import gcanProcess
 from com.Processing.imageutil.ui.CustomLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
 from com.Processing.imageutil.control.BasicUtil import *
+from com.Processing.imageutil.control.UndoQueue import *
 
 class MainWindow(object):
     def setupUi(self, MainWindow):
@@ -44,6 +45,7 @@ class MainWindow(object):
 
         self.__undoQueue = Queue(maxsize=10)
         self.__undoQueueIndex = 0
+        clear()
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -267,6 +269,8 @@ class MainWindow(object):
         self.__original_img = copy.deepcopy(self.__current_img)
         self.__original_img_path = img_name
 
+        add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
+
     def showImage(self, img, is_grayscale=False):
         print("show")
         x = img.shape[1]  # get image shape
@@ -303,19 +307,6 @@ class MainWindow(object):
         img_path, img_type = QFileDialog.getSaveFileName(self, "Save Image", self.__original_img_path, "*" + ext_name)
         if (img_path != "" and img_type != ""):
             cv2.imwrite(img_path + '.png', self.__current_img)
-
-    @QtCore.pyqtSlot()
-    def on_btn_undo_clicked(self):
-        """
-        On click event of "Undo" button
-        """
-        if self.__current_img is None:
-            self.__show_warning_message_box("Please Select Image")
-            return
-
-        self.__current_img = self.__original_img
-        self.__last_img = self.__current_img
-        self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_contrast_clicked(self):
@@ -401,7 +392,10 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = rotate_transfer(self.__current_img, 3)
+        self.__current_img = rotate_transfer(self.__current_img, 2)
+
+        add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
+
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
@@ -450,6 +444,7 @@ class MainWindow(object):
         self.__last_img = self.__current_img
 
         self.__current_operation = None
+
     @QtCore.pyqtSlot()
     def on_btn_cancel_clicked(self):
         if self.__current_operation == "clip":
@@ -459,3 +454,21 @@ class MainWindow(object):
         self.showImage(self.__current_img)
 
         self.__current_operation = None
+
+    @QtCore.pyqtSlot()
+    def on_btn_undo_clicked(self):
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+        self.__current_img, self.__undoQueueIndex = undo(self.__undoQueue, self.__undoQueueIndex)
+        self.showImage(self.__current_img)
+
+
+    @QtCore.pyqtSlot()
+    def on_btn_redo_clicked(self):
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+
+        self.__current_img, self.__undoQueueIndex = redo(self.__undoQueue, self.__undoQueueIndex)
+        self.showImage(self.__current_img)
