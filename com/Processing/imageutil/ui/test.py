@@ -1160,7 +1160,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "real_denoising")
+        self.__current_img = mirnet_process(self.__current_img, "real_denoising")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
@@ -1171,7 +1171,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "deblurring")
+        self.__current_img = mirnet_process(self.__current_img, "deblurring")
         # self.__current_img = deblurring(self.__current_img, "deblurring")
         self.showImage(self.__current_img)
 
@@ -1183,7 +1183,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "super_resolution")
+        self.__current_img = mirnet_process(self.__current_img, "super_resolution")
         self.showImage(self.__current_img)
 
 

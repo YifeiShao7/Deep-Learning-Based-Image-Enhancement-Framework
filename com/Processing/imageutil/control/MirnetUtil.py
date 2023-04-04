@@ -40,7 +40,7 @@ def load_img(img_src):
 def save_img(img):
     return cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-def get_weights_and_params(task, params):
+def get_weights_and_params(task, params, sr_scale):
     if task == 'real_denoising':
         weights = os.path.join('MirnetModel', 'real_denoising.pth')
     elif task == 'lowlight_enhancement':
@@ -48,16 +48,17 @@ def get_weights_and_params(task, params):
     elif task == 'contrast_enhancement':
         weights = os.path.join('MirnetModel', 'enhancement_fivek.pth')
     elif task == 'super_resolution':
-        weights = os.path.join('MirnetModel', 'sr_x4.pth')
-        params['scale'] = 4
+        weights = './MirnetModel/sr_x' + str(sr_scale) + '.pth'
+        print(weights)
+        # weights = os.path.join('MirnetModel', 'sr_x4.pth')
+        params['scale'] = sr_scale
     elif task == 'deblurring':
-        # weights = os.path.join('MirnetModel', 'deblurring.pth')
         weights = './MirnetModel/deblurring.pth'
         return weights, params
     params['task'] = task
     return weights, params
 
-def img_process(src_img, task):
+def mirnet_process(src_img, task, sr_scale=4):
     tile_default = None
     tile_overlap_default = 32
 
@@ -67,7 +68,7 @@ def img_process(src_img, task):
         model = load_arch['Restormer'](**params)
         img_multiple_of = 8
     else:
-        weights, params = get_weights_and_params(task, default_params)
+        weights, params = get_weights_and_params(task, default_params, sr_scale)
         load_arch = run_path('./MirnetModel/mirnet_v2_arch.py')
         model = load_arch['MIRNet_v2'](**params)
         # use for completion
@@ -93,7 +94,6 @@ def img_process(src_img, task):
 
         input_ = F.pad(input_, (0, padW, 0, padH), 'reflect')
 
-        print("1")
         if tile_default is None:
             restored = model(input_)
         else:

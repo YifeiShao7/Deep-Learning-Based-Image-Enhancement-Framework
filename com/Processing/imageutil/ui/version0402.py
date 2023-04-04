@@ -326,7 +326,7 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         # self.__current_img = adjust_contrast(self.__current_img, 0)
-        self.__current_img = img_process(self.__current_img, "contrast_enhancement")
+        self.__current_img = mirnet_process(self.__current_img, "contrast_enhancement")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
@@ -337,7 +337,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "lowlight_enhancement")
+        self.__current_img = mirnet_process(self.__current_img, "lowlight_enhancement")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
@@ -348,7 +348,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "real_denoising")
+        self.__current_img = mirnet_process(self.__current_img, "real_denoising")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
@@ -359,7 +359,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "deblurring")
+        self.__current_img = mirnet_process(self.__current_img, "deblurring")
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
@@ -370,7 +370,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = img_process(self.__current_img, "super_resolution")
+        self.__current_img = mirnet_process(self.__current_img, "super_resolution", 3)
         self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
