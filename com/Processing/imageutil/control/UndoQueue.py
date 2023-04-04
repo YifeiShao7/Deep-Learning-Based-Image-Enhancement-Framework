@@ -13,7 +13,6 @@ def add_img(src_img, queue, index):
     tempQueue = queue
 
     # define save name
-    # 通过re获得末位名称（index）
     if tempQueue.qsize() == 0:
         saveIndex = 0
     else:
@@ -43,6 +42,7 @@ def add_img(src_img, queue, index):
             index = 0
     #         when the cursor is not on the newest one (have undo operations)
     elif index > 0:
+        print("yeah!")
         newQueue = Queue(maxsize=10)
         transfer_num = tempQueue.qsize() - index
         while tempQueue.empty() == 0:
@@ -51,12 +51,26 @@ def add_img(src_img, queue, index):
                 transfer_num -= 1;
                 temp = tempQueue.get()
                 newQueue.put(temp)
+                print("transfer")
             #     the rest should delete
             else:
                 deletePath = SAVE_DIRECTORY + 'temp_' + str(tempQueue.get()) + '.png'
                 os.remove(deletePath)
 
-        index = newQueue.qsize()
+        # save image
+        if newQueue.qsize() == 0:
+            saveIndex = 0
+        else:
+            match = newQueue.queue[newQueue.qsize() - 1]
+            saveIndex = int(match) + 1
+
+        print("saveIndex:", saveIndex)
+
+        saveName = SAVE_DIRECTORY + 'temp_' + str(saveIndex) + '.png'
+        cv2.imwrite(saveName, src_img)
+        newQueue.put(str(saveIndex))
+
+        index = 0
         tempQueue = newQueue
     print("size&index:", tempQueue.qsize(), index)
     return tempQueue, index
