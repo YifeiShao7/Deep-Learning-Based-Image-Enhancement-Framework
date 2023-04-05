@@ -21,6 +21,7 @@ from com.Processing.imageutil.ui.CustomLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
 from com.Processing.imageutil.control.BasicUtil import *
 from com.Processing.imageutil.control.UndoQueue import *
+from com.Processing.imageutil.ui.CustomDialog import *
 
 class MainWindow(object):
     def setupUi(self, MainWindow):
@@ -287,6 +288,16 @@ class MainWindow(object):
         self.img_panel.setFixedSize(pix.width(), pix.height())
         self.img_panel.repaint()
 
+        # self.btn_undo.setEnabled(True)
+        # self.btn_undo.setEnabled(True)
+        # # 当undo指针指在第一张图片时，undo按钮不可用
+        # if self.__undoQueueIndex >= self.__undoQueue.qsize() - 1:
+        #     self.btn_undo.setEnabled(False)
+        #
+        # # 当指针指在最新一张图片时，redo按钮不可用
+        # if self.__undoQueueIndex == 0:
+        #     self.btn_redo.setEnabled(False)
+
 
     def __show_warning_message_box(self, msg):
         QMessageBox.warning(self, "Warning", msg, QMessageBox.Ok)
@@ -316,9 +327,18 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        # self.__current_img = adjust_contrast(self.__current_img, 0)
-        self.__current_img = mirnet_process(self.__current_img, "contrast_enhancement")
-        self.showImage(self.__current_img)
+
+        dialog = ContrastDialog()
+        dialog.show()
+        result_code = dialog.exec_()
+
+        if result_code == QtWidgets.QDialog.Accepted:
+            cate, value = dialog.get_contrast_result()
+            if cate == "auto":
+                self.__current_img = mirnet_process(self.__current_img, "contrast_enhancement")
+            elif cate == "custom":
+                self.__current_img = adjust_contrast(self.__current_img, value)
+            self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_lol_clicked(self):
@@ -328,8 +348,18 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = mirnet_process(self.__current_img, "lowlight_enhancement")
-        self.showImage(self.__current_img)
+
+        dialog = LightDialog()
+        dialog.show()
+        result_code = dialog.exec_()
+
+        if result_code == QtWidgets.QDialog.Accepted:
+            cate, value = dialog.get_lightness_result()
+            if cate == "auto":
+                self.__current_img = mirnet_process(self.__current_img, "lowlight_enhancement")
+            elif cate == "custom":
+                self.__current_img = adjust_lightness(self.__current_img, value)
+            self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_denoise_clicked(self):
@@ -361,8 +391,18 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = mirnet_process(self.__current_img, "super_resolution", 3)
-        self.showImage(self.__current_img)
+
+        dialog = SrDialog()
+        dialog.show()
+        result_code = dialog.exec_()
+
+        if result_code == QtWidgets.QDialog.Accepted:
+            sr_scale = dialog.get_sr_result()
+            if sr_scale == 0:
+                self.__show_warning_message_box("Haven't Select Any Choice")
+                return
+            self.__current_img = mirnet_process(self.__current_img, "super_resolution", int(sr_scale))
+            self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_dehaze_clicked(self):
@@ -392,19 +432,36 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = rotate_transfer(self.__current_img, 2)
 
-        add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
+        dialog = RotateDialog()
+        dialog.show()
+        result_code = dialog.exec_()
 
-        self.showImage(self.__current_img)
+        if result_code == QtWidgets.QDialog.Accepted:
+            rotate_cate = dialog.get_rotate_result()
+            if rotate_cate == 0:
+                self.__show_warning_message_box("Haven't Select Any Choice")
+                return
+            self.__current_img = rotate_transfer(self.__current_img, int(rotate_cate))
+            self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_mirror_clicked(self):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = mirror_transfer(self.__current_img, 1)
-        self.showImage(self.__current_img)
+
+        dialog = MirrorDialog()
+        dialog.show()
+        result_code = dialog.exec_()
+
+        if result_code == QtWidgets.QDialog.Accepted:
+            mirror_dir = dialog.get_mirror_dir()
+            if mirror_dir == 0:
+                self.__show_warning_message_box("Haven't Select Any Choice")
+                return
+            self.__current_img = mirror_transfer(self.__current_img, int(mirror_dir))
+            self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_origin_clicked(self):
