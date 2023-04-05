@@ -42,7 +42,6 @@ def add_img(src_img, queue, index):
             index = 0
     #         when the cursor is not on the newest one (have undo operations)
     elif index > 0:
-        print("yeah!")
         newQueue = Queue(maxsize=10)
         transfer_num = tempQueue.qsize() - index
         while tempQueue.empty() == 0:

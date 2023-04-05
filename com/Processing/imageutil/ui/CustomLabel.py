@@ -105,4 +105,8 @@ class ImageLabel(QLabel):
     def clearRect(self):
         # 清除
         self.__isClear = True
+        self.img_x_start = 0
+        self.img_x_end = 0
+        self.img_y_start = 0
+        self.img_y_end = 0
         self.update()

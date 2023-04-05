@@ -38,7 +38,7 @@ class MainWindow(object):
 
         self.__current_img = None
         self.__original_img = None  # origin image
-        self.__last_img = None  # last step of operation
+        # self.__last_img = None  # last step of operation
         self.__current_operation = None  # current operation record
         self.__temp_img = None
 
@@ -109,6 +109,7 @@ class MainWindow(object):
         self.btn_confirm.setMinimumSize(QtCore.QSize(80, 0))
         self.btn_confirm.setMaximumSize(QtCore.QSize(80, 16777215))
         self.btn_confirm.setObjectName("btn_confirm")
+        self.btn_confirm.setEnabled(False)
         self.horizontalLayout_3.addWidget(self.btn_confirm)
         spacerItem5 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem5)
@@ -116,6 +117,7 @@ class MainWindow(object):
         self.btn_cancel.setMinimumSize(QtCore.QSize(80, 0))
         self.btn_cancel.setMaximumSize(QtCore.QSize(80, 16777215))
         self.btn_cancel.setObjectName("btn_cancel")
+        self.btn_cancel.setEnabled(False)
         self.horizontalLayout_3.addWidget(self.btn_cancel)
         spacerItem6 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem6)
@@ -266,11 +268,17 @@ class MainWindow(object):
         # Initialize the history records
         self.showImage(img)
         self.__current_img = img
-        self.__last_img = self.__current_img
+        # self.__last_img = self.__current_img
         self.__original_img = copy.deepcopy(self.__current_img)
         self.__original_img_path = img_name
 
         add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
+        self.btn_redo.setEnabled(False)
+        if self.__undoQueue.qsize() > 1:
+            self.btn_undo.setEnabled(True)
+        else:
+            self.btn_undo.setEnabled(False)
+
 
     def showImage(self, img, is_grayscale=False):
         print("show")
@@ -338,7 +346,10 @@ class MainWindow(object):
                 self.__current_img = mirnet_process(self.__current_img, "contrast_enhancement")
             elif cate == "custom":
                 self.__current_img = adjust_contrast(self.__current_img, value)
+            self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
             self.showImage(self.__current_img)
+            self.btn_undo.setEnabled(True)
+            self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_lol_clicked(self):
@@ -359,7 +370,10 @@ class MainWindow(object):
                 self.__current_img = mirnet_process(self.__current_img, "lowlight_enhancement")
             elif cate == "custom":
                 self.__current_img = adjust_lightness(self.__current_img, value)
+            self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
             self.showImage(self.__current_img)
+            self.btn_undo.setEnabled(True)
+            self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_denoise_clicked(self):
@@ -370,7 +384,10 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         self.__current_img = mirnet_process(self.__current_img, "real_denoising")
+        self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
         self.showImage(self.__current_img)
+        self.btn_undo.setEnabled(True)
+        self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_deblur_clicked(self):
@@ -381,7 +398,10 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         self.__current_img = mirnet_process(self.__current_img, "deblurring")
+        self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
         self.showImage(self.__current_img)
+        self.btn_undo.setEnabled(True)
+        self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_sr_clicked(self):
@@ -402,7 +422,10 @@ class MainWindow(object):
                 self.__show_warning_message_box("Haven't Select Any Choice")
                 return
             self.__current_img = mirnet_process(self.__current_img, "super_resolution", int(sr_scale))
+            self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
             self.showImage(self.__current_img)
+            self.btn_undo.setEnabled(True)
+            self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_dehaze_clicked(self):
@@ -413,7 +436,10 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         self.__current_img = gcanProcess(self.__current_img, "dehaze")
+        self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
         self.showImage(self.__current_img)
+        self.btn_undo.setEnabled(True)
+        self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_derain_clicked(self):
@@ -424,7 +450,10 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         self.__current_img = gcanProcess(self.__current_img, "derain")
+        self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
         self.showImage(self.__current_img)
+        self.btn_undo.setEnabled(True)
+        self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_rotate_clicked(self):
@@ -443,7 +472,10 @@ class MainWindow(object):
                 self.__show_warning_message_box("Haven't Select Any Choice")
                 return
             self.__current_img = rotate_transfer(self.__current_img, int(rotate_cate))
+            self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
             self.showImage(self.__current_img)
+            self.btn_undo.setEnabled(True)
+            self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def on_btn_mirror_clicked(self):
@@ -461,21 +493,24 @@ class MainWindow(object):
                 self.__show_warning_message_box("Haven't Select Any Choice")
                 return
             self.__current_img = mirror_transfer(self.__current_img, int(mirror_dir))
+            self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
             self.showImage(self.__current_img)
+            self.btn_undo.setEnabled(True)
+            self.btn_redo.setEnabled(False)
 
     @QtCore.pyqtSlot()
-    def on_btn_origin_clicked(self):
+    def on_btn_origin_pressed(self):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
 
-        if self.__origin_count == 1:
-            self.btn_origin.setText("Newest")
-            self.showImage(self.__original_img)
-        elif self.__origin_count == -1:
-            self.btn_origin.setText("Origin")
-            self.showImage(self.__current_img)
-        self.__origin_count = self.__origin_count * -1
+        self.showImage(self.__original_img)
+    @QtCore.pyqtSlot()
+    def on_btn_origin_released(self):
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+        self.showImage(self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_cutting_clicked(self):
@@ -484,6 +519,8 @@ class MainWindow(object):
             return
 
         self.__show_info_message_box("Click Confirm button to ensure your modification")
+        self.btn_confirm.setEnabled(True)
+        self.btn_cancel.setEnabled(True)
         self.__current_operation = "clip"
         self.img_panel.flag = True
         self.img_panel.setCursor(Qt.CrossCursor)
@@ -493,22 +530,39 @@ class MainWindow(object):
         if self.__current_operation == "clip":
             x_start, x_end = self.img_panel.img_x_start, self.img_panel.img_x_end
             y_start, y_end = self.img_panel.img_y_start, self.img_panel.img_y_end
-            self.__current_img = crop_image(self.__current_img, x_start, x_end, y_start, y_end)
-            self.showImage(self.__current_img)
+            print(x_start, x_end, y_start, y_end)
+            if (x_start == 0 and x_end == 0 and y_start == 0 and y_end == 0):
+                self.showImage(self.__current_img)
+                self.btn_confirm.setEnabled(False)
+                self.btn_cancel.setEnabled(False)
+                return
+            else:
+                self.__current_img = crop_image(self.__current_img, x_start, x_end, y_start, y_end)
+                self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue,
+                                                                  self.__undoQueueIndex)
+                self.showImage(self.__current_img)
 
-            self.img_panel.clearRect()
-            self.img_panel.flag = False
-        self.__last_img = self.__current_img
+                self.img_panel.clearRect()
+                self.img_panel.flag = False
 
+                self.btn_confirm.setEnabled(False)
+                self.btn_cancel.setEnabled(False)
+
+                self.btn_undo.setEnabled(True)
+                self.btn_redo.setEnabled(False)
+
+        # refresh params
         self.__current_operation = None
+
 
     @QtCore.pyqtSlot()
     def on_btn_cancel_clicked(self):
         if self.__current_operation == "clip":
             self.img_panel.clearRect()
             self.img_panel.flag = False
-        self.__current_img = self.__last_img
-        self.showImage(self.__current_img)
+            self.btn_confirm.setEnabled(False)
+            self.btn_cancel.setEnabled(False)
+            return
 
         self.__current_operation = None
 
@@ -518,6 +572,9 @@ class MainWindow(object):
             self.__show_warning_message_box("Haven't Select Image")
             return
         self.__current_img, self.__undoQueueIndex = undo(self.__undoQueue, self.__undoQueueIndex)
+        if self.__undoQueueIndex == self.__undoQueue.qsize()-1:
+            self.btn_undo.setEnabled(False)
+        self.btn_redo.setEnabled(True)
         self.showImage(self.__current_img)
 
 
@@ -528,4 +585,10 @@ class MainWindow(object):
             return
 
         self.__current_img, self.__undoQueueIndex = redo(self.__undoQueue, self.__undoQueueIndex)
+        if self.__undoQueueIndex == 0:
+            self.btn_redo.setEnabled(False)
+        self.btn_undo.setEnabled(True)
         self.showImage(self.__current_img)
+
+    # def onExit(self):
+    #     self.__undoQueue, self.__undoQueueIndex = clear()
