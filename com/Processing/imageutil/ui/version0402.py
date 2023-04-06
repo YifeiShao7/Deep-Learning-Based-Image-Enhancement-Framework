@@ -258,8 +258,10 @@ class MainWindow(object):
         """
         On click event of "open" button
         """
-        img_name, img_type = QFileDialog.getOpenFileName(self, "Open the image", "", "*.png;;*.jpg;;*.jpeg;;*.bmp")
+        img_name, img_type = QFileDialog.getOpenFileName(self, "Open the image", "", "*.png *.jpg *.jpeg *.bmp")
         if (img_name == "") or (img_name is None):
+            if self.__undoQueue != 0:
+                return
             self.__show_warning_message_box("Please Select Image")
             return
 
