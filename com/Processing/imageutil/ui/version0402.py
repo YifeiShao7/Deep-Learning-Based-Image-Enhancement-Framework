@@ -13,7 +13,7 @@ from queue import Queue
 from PyQt5 import QtCore, QtGui, QtWidgets
 import copy
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor
+from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor, QPainter
 from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \
     QLineEdit, QMessageBox
 from com.Processing.imageutil.control.GCANetUtil import gcanProcess
@@ -22,6 +22,7 @@ from com.Processing.imageutil.control.MirnetUtil import *
 from com.Processing.imageutil.control.BasicUtil import *
 from com.Processing.imageutil.control.UndoQueue import *
 from com.Processing.imageutil.ui.CustomDialog import *
+from com.Processing.imageutil.control.HiFillUtil import inpainting_process
 
 class MainWindow(object):
     def setupUi(self, MainWindow):
@@ -46,6 +47,9 @@ class MainWindow(object):
 
         self.__undoQueue = Queue(maxsize=10)
         self.__undoQueueIndex = 0
+        self.last_x, self.last_y = None, None
+
+        self.drawMask = 0
         clear()
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -145,6 +149,11 @@ class MainWindow(object):
         self.img_panel.setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(218, 218, 218)")
         self.img_panel.setText("")
         self.img_panel.setObjectName("img_panel")
+
+        self.img_panel.mousePressEvent = self.mouse_press_event
+        self.img_panel.mouseMoveEvent = self.mouse_move_event
+        self.img_panel.mouseReleaseEvent = self.mouse_release_event
+
         self.gridLayout_2.addWidget(self.img_panel, 0, 1, 1, 1)
         self.gridLayout.addWidget(self.frame_4, 0, 0, 1, 1)
         self.frame_5 = QtWidgets.QFrame(self.centralwidget)
@@ -327,7 +336,11 @@ class MainWindow(object):
         ext_name = self.__original_img_path[self.__original_img_path.rindex("."):]
         img_path, img_type = QFileDialog.getSaveFileName(self, "Save Image", self.__original_img_path, "*" + ext_name)
         if (img_path != "" and img_type != ""):
-            cv2.imwrite(img_path + '.png', self.__current_img)
+            pixmap = self.img_panel.pixmap()
+            # pixmap = self.background_pixmap
+            pixmap.save(img_path)
+            # self.background_pixmap.save(img_path)
+            # cv2.imwrite(img_path + '.png', self.__current_img)
 
     @QtCore.pyqtSlot()
     def on_btn_contrast_clicked(self):
@@ -553,6 +566,22 @@ class MainWindow(object):
                 self.btn_undo.setEnabled(True)
                 self.btn_redo.setEnabled(False)
 
+        elif self.__current_operation == "draw_mask":
+            self.maskImg = self.maskImage
+
+            qimage = self.maskImg.toImage()
+            width = qimage.width()
+            height = qimage.height()
+            # ptr = qimage.bits()
+            buffer = qimage.bits().asstring(qimage.byteCount())
+            # array = np.frombuffer(ptr, dtype=np.uint8).reshape((height,width,4))
+            array = np.frombuffer(buffer, dtype=np.uint8).reshape(height, width, 4)
+            rgb_array = array[:,:,:3]
+            result = inpainting_process(self.__current_img, rgb_array)
+            self.__current_img = result
+            self.showImage(self.__current_img)
+            self.drawMask = 0
+
         # refresh params
         self.__current_operation = None
 
@@ -565,7 +594,11 @@ class MainWindow(object):
             self.btn_confirm.setEnabled(False)
             self.btn_cancel.setEnabled(False)
             return
-
+        if self.__current_operation == "draw_mask":
+            self.drawMask = 0
+            self.btn_confirm.setEnabled(False)
+            self.btn_cancel.setEnabled(False)
+            self.showImage(self.__current_img)
         self.__current_operation = None
 
     @QtCore.pyqtSlot()
@@ -592,5 +625,48 @@ class MainWindow(object):
         self.btn_undo.setEnabled(True)
         self.showImage(self.__current_img)
 
-    # def onExit(self):
-    #     self.__undoQueue, self.__undoQueueIndex = clear()
+    def mouse_press_event(self, event):
+        if (self.drawMask == 1):
+            self.last_x, self.last_y = event.pos().x(), event.pos().y()
+
+    def mouse_move_event(self, event):
+        if (self.drawMask == 1):
+            if self.last_x is not None and self.last_y is not None:
+                painter = QtGui.QPainter(self.img_panel.pixmap())
+                painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
+                painter.setPen(QtGui.QPen(QtCore.Qt.black, 10))
+                painter.drawLine(self.last_x, self.last_y, event.pos().x(), event.pos().y())
+                painter.end()
+
+                painter2 = QtGui.QPainter(self.maskImage)
+                painter2.setCompositionMode(QPainter.CompositionMode_SourceOver)
+                painter2.setPen(QtGui.QPen(QtCore.Qt.black, 10))
+                painter2.drawLine(self.last_x, self.last_y, event.pos().x(), event.pos().y())
+                painter2.end()
+
+                self.last_x, self.last_y = event.pos().x(), event.pos().y()
+                self.img_panel.update()
+
+    def mouse_release_event(self, event):
+        if (self.drawMask == 1):
+            self.last_x, self.last_y = None, None
+
+    def on_btn_inpainting_clicked(self):
+        if self.__current_img is None:
+            self.__show_warning_message_box("Haven't Select Image")
+            return
+
+        self.__show_info_message_box("draw on the image to modify the inpainting mask\nclick Confirm button to ensure your modification\nclick Open button to upload another mask image")
+
+        # 开始绘制
+        self.drawMask = 1
+        self.__current_operation = 'draw_mask'
+        self.maskImage = QtGui.QPixmap(self.img_panel.size())
+        self.maskImage.fill(QtGui.QColor('white'))
+
+        # 新建一个白色背景的mask图片
+        self.btn_confirm.setEnabled(True)
+        self.btn_cancel.setEnabled(True)
+        # confirm/cancel 以结束绘制，若confirm 保存mask，若cancel 清理界面
+
+        # 若再次点击open按钮，则视为传入一张mask
