@@ -15,7 +15,7 @@ import copy
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor, QPainter
 from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \
-    QLineEdit, QMessageBox
+    QLineEdit, QMessageBox, QSizePolicy
 from com.Processing.imageutil.control.GCANetUtil import gcanProcess
 from com.Processing.imageutil.ui.CustomLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
@@ -153,6 +153,10 @@ class MainWindow(object):
         self.img_panel.mousePressEvent = self.mouse_press_event
         self.img_panel.mouseMoveEvent = self.mouse_move_event
         self.img_panel.mouseReleaseEvent = self.mouse_release_event
+
+        # self.img_panel.setAlignment(Qt.AlignCenter)
+        # self.img_panel.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        # self.img_panel.setScaledContents(True)
 
         self.gridLayout_2.addWidget(self.img_panel, 0, 1, 1, 1)
         self.gridLayout.addWidget(self.frame_4, 0, 0, 1, 1)
@@ -306,17 +310,6 @@ class MainWindow(object):
         self.img_panel.setPixmap(pix)
         self.img_panel.setFixedSize(pix.width(), pix.height())
         self.img_panel.repaint()
-
-        # self.btn_undo.setEnabled(True)
-        # self.btn_undo.setEnabled(True)
-        # # 当undo指针指在第一张图片时，undo按钮不可用
-        # if self.__undoQueueIndex >= self.__undoQueue.qsize() - 1:
-        #     self.btn_undo.setEnabled(False)
-        #
-        # # 当指针指在最新一张图片时，redo按钮不可用
-        # if self.__undoQueueIndex == 0:
-        #     self.btn_redo.setEnabled(False)
-
 
     def __show_warning_message_box(self, msg):
         QMessageBox.warning(self, "Warning", msg, QMessageBox.Ok)
@@ -547,6 +540,7 @@ class MainWindow(object):
             y_start, y_end = self.img_panel.img_y_start, self.img_panel.img_y_end
             print(x_start, x_end, y_start, y_end)
             if (x_start == 0 and x_end == 0 and y_start == 0 and y_end == 0):
+                # print("can change")
                 self.showImage(self.__current_img)
                 self.btn_confirm.setEnabled(False)
                 self.btn_cancel.setEnabled(False)
@@ -580,7 +574,10 @@ class MainWindow(object):
             result = inpainting_process(self.__current_img, rgb_array)
             self.__current_img = result
             self.showImage(self.__current_img)
+            self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
             self.drawMask = 0
+            self.btn_undo.setEnabled(True)
+            self.btn_redo.setEnabled(False)
 
         # refresh params
         self.__current_operation = None
