@@ -278,6 +278,8 @@ class MainWindow(object):
 
         img = cv2.imread(img_name)
 
+        img = resize_input(img, 860, 660)
+
         # Initialize the history records
         self.showImage(img)
         self.__current_img = img

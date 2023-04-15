@@ -100,3 +100,19 @@ def crop_image(src_img, x_start, x_end, y_start, y_end):
     tmp_img = tmp_img[y_start:y_end, x_start:x_end]  # width, height
     return cv2.cvtColor(tmp_img, cv2.COLOR_RGB2BGR)
 
+def resize_input(src_img, panel_length, panel_height):
+    new_size = (panel_length ,panel_height)
+    height, width = src_img.shape[:2]
+    ratio = float(new_size[0])/float(width)
+
+    new_height = int(height*ratio)
+
+    if new_height > new_size[1]:
+        ratio = float(new_size[1])/float(height)
+        new_width = int(width * ratio)
+        new_height = new_size[1]
+    else:
+        new_width = new_size[0]
+
+    resized_image = cv2.resize(src_img, (new_width, new_height), interpolation=cv2.INTER_AREA)
+    return resized_image
