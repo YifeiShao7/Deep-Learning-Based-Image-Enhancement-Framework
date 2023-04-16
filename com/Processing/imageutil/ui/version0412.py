@@ -32,11 +32,9 @@ class MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         MainWindow.setFont(font)
-
         self.create_widget(MainWindow)
 
         self.retranslateUi(MainWindow)
-
         self.__current_img = None
         self.__original_img = None  # origin image
         # self.__last_img = None  # last step of operation
@@ -53,7 +51,6 @@ class MainWindow(object):
         clear()
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
     def create_widget(self, MainWindow):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -81,13 +78,27 @@ class MainWindow(object):
         self.btn_open.setMaximumSize(QtCore.QSize(80, 16777215))
         self.btn_open.setObjectName("btn_open")
         self.horizontalLayout_3.addWidget(self.btn_open)
+        self.btn_open.setStyleSheet('''
+                    QPushButton {
+                        background-color: #3a3a3a;
+                        color: #fff;
+                    }
+                ''')
+
         spacerItem = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+
         self.horizontalLayout_3.addItem(spacerItem)
         self.btn_save = QtWidgets.QPushButton(self.operation)
         self.btn_save.setMinimumSize(QtCore.QSize(80, 0))
         self.btn_save.setMaximumSize(QtCore.QSize(80, 16777215))
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_3.addWidget(self.btn_save)
+        self.btn_save.setStyleSheet('''
+                            QPushButton {
+                                background-color: #3a3a3a;
+                                color: #fff;
+                            }
+                        ''')
         spacerItem1 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
         self.btn_undo = QtWidgets.QPushButton(self.operation)
@@ -96,12 +107,34 @@ class MainWindow(object):
         self.btn_undo.setObjectName("btn_undo")
         self.btn_undo.setEnabled(False)
         self.horizontalLayout_3.addWidget(self.btn_undo)
+        self.btn_undo.setStyleSheet('''
+            QPushButton {
+                background-color: #3a3a3a;
+                color: #fff;
+            }
+            
+            QPushButton:disabled {
+                background-color: #3a3a3a;
+                color: rgba(255,255,255,0.3);
+            }
+        ''')
         spacerItem2 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem2)
         self.btn_redo = QtWidgets.QPushButton(self.operation)
         self.btn_redo.setObjectName("btn_redo")
         self.btn_redo.setEnabled(False)
         self.horizontalLayout_3.addWidget(self.btn_redo)
+        self.btn_redo.setStyleSheet('''
+                    QPushButton {
+                        background-color: #3a3a3a;
+                        color: #fff;
+                    }
+
+                    QPushButton:disabled {
+                        background-color: #3a3a3a;
+                        color: rgba(255,255,255,0.3);
+                    }
+                ''')
         spacerItem3 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem3)
         self.btn_cutting = QtWidgets.QPushButton(self.operation)
@@ -109,6 +142,12 @@ class MainWindow(object):
         self.btn_cutting.setMaximumSize(QtCore.QSize(80, 16777215))
         self.btn_cutting.setObjectName("btn_cutting")
         self.horizontalLayout_3.addWidget(self.btn_cutting)
+        self.btn_cutting.setStyleSheet('''
+                                    QPushButton {
+                                        background-color: #3a3a3a;
+                                        color: #fff;
+                                    }
+                                ''')
         spacerItem4 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
         self.btn_confirm = QtWidgets.QPushButton(self.operation)
@@ -117,6 +156,17 @@ class MainWindow(object):
         self.btn_confirm.setObjectName("btn_confirm")
         self.btn_confirm.setEnabled(False)
         self.horizontalLayout_3.addWidget(self.btn_confirm)
+        self.btn_confirm.setStyleSheet('''
+                            QPushButton {
+                                background-color: #3a3a3a;
+                                color: #fff;
+                            }
+
+                            QPushButton:disabled {
+                                background-color: #3a3a3a;
+                                color: rgba(255,255,255,0.3);
+                            }
+                        ''')
         spacerItem5 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem5)
         self.btn_cancel = QtWidgets.QPushButton(self.operation)
@@ -125,6 +175,17 @@ class MainWindow(object):
         self.btn_cancel.setObjectName("btn_cancel")
         self.btn_cancel.setEnabled(False)
         self.horizontalLayout_3.addWidget(self.btn_cancel)
+        self.btn_cancel.setStyleSheet('''
+                            QPushButton {
+                                background-color: #3a3a3a;
+                                color: #fff;
+                            }
+
+                            QPushButton:disabled {
+                                background-color: #3a3a3a;
+                                color: rgba(255,255,255,0.3);
+                            }
+                        ''')
         spacerItem6 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem6)
         self.btn_origin = QtWidgets.QPushButton(self.operation)
@@ -132,12 +193,23 @@ class MainWindow(object):
         self.btn_origin.setMaximumSize(QtCore.QSize(200, 16777215))
         self.btn_origin.setObjectName("btn_origin")
         self.horizontalLayout_3.addWidget(self.btn_origin)
+        self.btn_origin.setStyleSheet('''
+                                            QPushButton {
+                                                background-color: #3a3a3a;
+                                                color: #fff;
+                                            }
+                                        ''')
         self.horizontalLayout_4.addWidget(self.operation)
         self.frame_3 = QtWidgets.QFrame(self.centralwidget)
         self.frame_3.setGeometry(QtCore.QRect(0, 60, 881, 691))
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
+        self.frame_3.setStyleSheet('''
+            QFrame {
+                background-color: #2a2a2a;
+            }
+        ''')
         self.gridLayout = QtWidgets.QGridLayout(self.frame_3)
         self.gridLayout.setObjectName("gridLayout")
 
@@ -149,6 +221,11 @@ class MainWindow(object):
         self.img_panel.setObjectName("img_panel")
         self.img_panel.setScaledContents(True)
         self.gridLayout.addWidget(self.img_panel, 1, 0, 1, 1)
+        self.img_panel.setStyleSheet('''
+            ImageLabel {
+                background-color: #2a2a2a;
+            }
+        ''')
 
         self.frame_5 = QtWidgets.QFrame(self.centralwidget)
         self.frame_5.setGeometry(QtCore.QRect(880, 60, 150, 704))
@@ -170,41 +247,89 @@ class MainWindow(object):
         self.btn_contrast.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_contrast.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_contrast.setObjectName("btn_contrast")
+        self.btn_contrast.setStyleSheet('''
+                                                    QPushButton {
+                                                        background-color: #3a3a3a;
+                                                        color: #fff;
+                                                    }
+                                                ''')
         self.btn_lol = QtWidgets.QPushButton(self.frame_6)
         self.btn_lol.setGeometry(QtCore.QRect(7, 100, 120, 35))
         self.btn_lol.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_lol.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_lol.setObjectName("btn_lol")
+        self.btn_lol.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.btn_sr = QtWidgets.QPushButton(self.frame_6)
         self.btn_sr.setGeometry(QtCore.QRect(7, 265, 120, 35))
         self.btn_sr.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_sr.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_sr.setObjectName("btn_sr")
+        self.btn_sr.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.btn_denoise = QtWidgets.QPushButton(self.frame_6)
         self.btn_denoise.setGeometry(QtCore.QRect(7, 155, 120, 35))
         self.btn_denoise.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_denoise.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_denoise.setObjectName("btn_denoise")
+        self.btn_denoise.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.btn_deblur = QtWidgets.QPushButton(self.frame_6)
         self.btn_deblur.setGeometry(QtCore.QRect(7, 210, 120, 35))
         self.btn_deblur.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_deblur.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_deblur.setObjectName("btn_deblur")
+        self.btn_deblur.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.btn_dehaze = QtWidgets.QPushButton(self.frame_6)
         self.btn_dehaze.setGeometry(QtCore.QRect(7, 320, 120, 35))
         self.btn_dehaze.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_dehaze.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_dehaze.setObjectName("btn_dehaze")
+        self.btn_dehaze.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.btn_derain = QtWidgets.QPushButton(self.frame_6)
         self.btn_derain.setGeometry(QtCore.QRect(7, 375, 120, 35))
         self.btn_derain.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_derain.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_derain.setObjectName("btn_derain")
+        self.btn_derain.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.btn_inpainting = QtWidgets.QPushButton(self.frame_6)
         self.btn_inpainting.setGeometry(QtCore.QRect(7, 430, 120, 35))
         self.btn_inpainting.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_inpainting.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_inpainting.setObjectName("btn_inpainting")
+        self.btn_inpainting.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.frame = QtWidgets.QFrame(self.frame_6)
         self.frame.setGeometry(QtCore.QRect(0, 490, 140, 5))
         self.frame.setMinimumSize(QtCore.QSize(140, 5))
@@ -217,21 +342,43 @@ class MainWindow(object):
         self.btn_rotate.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_rotate.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_rotate.setObjectName("btn_rotate")
+        self.btn_rotate.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.btn_mirror = QtWidgets.QPushButton(self.frame_6)
         self.btn_mirror.setGeometry(QtCore.QRect(7, 610, 120, 35))
         self.btn_mirror.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_mirror.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_mirror.setObjectName("btn_mirror")
+        self.btn_mirror.setStyleSheet('''
+                                                            QPushButton {
+                                                                background-color: #3a3a3a;
+                                                                color: #fff;
+                                                            }
+                                                        ''')
         self.label = QtWidgets.QLabel(self.frame_6)
         self.label.setGeometry(QtCore.QRect(10, 510, 120, 16))
         self.label.setMinimumSize(QtCore.QSize(120, 0))
         self.label.setMaximumSize(QtCore.QSize(120, 16777215))
         self.label.setObjectName("label")
+        self.label.setStyleSheet('''
+            QLabel {
+                color: #fff;
+            }
+        ''')
         self.label_2 = QtWidgets.QLabel(self.frame_6)
         self.label_2.setGeometry(QtCore.QRect(10, 10, 120, 16))
         self.label_2.setMinimumSize(QtCore.QSize(120, 0))
         self.label_2.setMaximumSize(QtCore.QSize(120, 16777215))
         self.label_2.setObjectName("label_2")
+        self.label_2.setStyleSheet('''
+                    QLabel {
+                        color: #fff;
+                    }
+                ''')
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")

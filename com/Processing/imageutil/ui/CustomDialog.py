@@ -9,6 +9,7 @@ class ContrastDialog(QDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
+        self.setStyleSheet("background-color: #3a3a3a; color: #fff;")
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -21,9 +22,21 @@ class ContrastDialog(QDialog):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.btn_auto = QtWidgets.QRadioButton(Dialog)
         self.btn_auto.setObjectName("btn_auto")
+        self.btn_auto.setStyleSheet('''
+        QRadioButton {
+            background-color: #3a3a3a;
+            color: #fff;    
+        }
+        ''')
         self.horizontalLayout_2.addWidget(self.btn_auto)
         self.btn_custom = QtWidgets.QRadioButton(Dialog)
         self.btn_custom.setObjectName("btn_custom")
+        self.btn_custom.setStyleSheet('''
+                QRadioButton {
+                    background-color: #3a3a3a;
+                    color: #fff;    
+                }
+                ''')
         self.horizontalLayout_2.addWidget(self.btn_custom)
         self.btn_group = QButtonGroup()
         self.btn_group.addButton(self.btn_auto)
@@ -57,6 +70,12 @@ class ContrastDialog(QDialog):
         self.btn_save.setMaximumSize(QtCore.QSize(150, 40))
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_3.addWidget(self.btn_save)
+        self.btn_save.setStyleSheet('''
+            QPushButton {
+                background-color: #5a5a5a;
+                color: #fff;
+            }
+        ''')
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
         self.retranslateUi(Dialog)
@@ -82,6 +101,7 @@ class LightDialog(QDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
+        self.setStyleSheet("background-color: #3a3a3a; color: #fff;")
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -94,9 +114,21 @@ class LightDialog(QDialog):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.btn_auto = QtWidgets.QRadioButton(Dialog)
         self.btn_auto.setObjectName("btn_auto")
+        self.btn_auto.setStyleSheet('''
+                QRadioButton {
+                    background-color: #3a3a3a;
+                    color: #fff;    
+                }
+                ''')
         self.horizontalLayout_2.addWidget(self.btn_auto)
         self.btn_custom = QtWidgets.QRadioButton(Dialog)
         self.btn_custom.setObjectName("btn_custom")
+        self.btn_custom.setStyleSheet('''
+                        QRadioButton {
+                            background-color: #3a3a3a;
+                            color: #fff;    
+                        }
+                        ''')
         self.horizontalLayout_2.addWidget(self.btn_custom)
         self.btn_group = QButtonGroup()
         self.btn_group.addButton(self.btn_auto)
@@ -129,6 +161,12 @@ class LightDialog(QDialog):
         self.btn_save = QtWidgets.QPushButton(Dialog)
         self.btn_save.setMaximumSize(QtCore.QSize(150, 40))
         self.btn_save.setObjectName("btn_save")
+        self.btn_save.setStyleSheet('''
+                    QPushButton {
+                        background-color: #5a5a5a;
+                        color: #fff;
+                    }
+                ''')
         self.horizontalLayout_3.addWidget(self.btn_save)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
@@ -155,6 +193,7 @@ class SrDialog(QDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
+        self.setStyleSheet("background-color: #3a3a3a; color: #fff;")
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -214,6 +253,8 @@ class RotateDialog(QDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
+        self.setStyleSheet("background-color: #3a3a3a; color: #fff;")
+        self.setStyleSheet("QWidget { border: 1px solid black; }")
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -223,6 +264,7 @@ class RotateDialog(QDialog):
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        # self.horizontalLayout_2.setStyleSheet("QHBoxLayout { border: 1px solid black }")
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.btn_rotate1 = QtWidgets.QRadioButton(Dialog)
         self.btn_rotate1.setObjectName("btn_rotate1")
@@ -272,6 +314,7 @@ class MirrorDialog(QDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
+        self.setStyleSheet("background-color: #3a3a3a; color: #fff;")
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
