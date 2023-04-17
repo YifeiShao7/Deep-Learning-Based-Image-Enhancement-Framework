@@ -63,7 +63,7 @@ def mirnet_process(src_img, task, sr_scale=4):
     tile_overlap_default = 32
 
     if task == 'deblurring':
-        weights, params = get_weights_and_params(task, deblur_params)
+        weights, params = get_weights_and_params(task, deblur_params, sr_scale)
         load_arch = run_path('./MirnetModel/restormer_arch.py')
         model = load_arch['Restormer'](**params)
         img_multiple_of = 8
@@ -74,8 +74,14 @@ def mirnet_process(src_img, task, sr_scale=4):
         # use for completion
         img_multiple_of = 4
 
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        torch.device('cpu')
     # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    device = torch.device('mps')
+    # device = torch.device('mps')
     model.to(device)
 
     checkpoint = torch.load(weights)
