@@ -27,8 +27,8 @@ from com.Processing.imageutil.control.HiFillUtil import inpaint_process
 class MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1029, 774)
-        MainWindow.setMinimumSize(QtCore.QSize(1029, 774))
+        MainWindow.resize(1060, 774)
+        MainWindow.setMinimumSize(QtCore.QSize(1060, 774))
         font = QtGui.QFont()
         font.setPointSize(10)
         MainWindow.setFont(font)
@@ -37,7 +37,6 @@ class MainWindow(object):
         self.retranslateUi(MainWindow)
         self.__current_img = None
         self.__original_img = None  # origin image
-        # self.__last_img = None  # last step of operation
         self.__current_operation = None  # current operation record
         self.__temp_img = None
 
@@ -53,7 +52,7 @@ class MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.title = QtWidgets.QFrame(self.centralwidget)
-        self.title.setGeometry(QtCore.QRect(0, 0, 1031, 65))
+        self.title.setGeometry(QtCore.QRect(0, 0, 1060, 65))
         self.title.setMinimumSize(QtCore.QSize(0, 65))
         self.title.setMaximumSize(QtCore.QSize(188888, 55))
         self.title.setStyleSheet("background: rgb(60, 60, 60)")
@@ -63,8 +62,8 @@ class MainWindow(object):
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.title)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.operation = QtWidgets.QFrame(self.title)
-        self.operation.setMinimumSize(QtCore.QSize(1000, 39))
-        self.operation.setMaximumSize(QtCore.QSize(800, 45))
+        self.operation.setMinimumSize(QtCore.QSize(900, 39))
+        self.operation.setMaximumSize(QtCore.QSize(900, 45))
         self.operation.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.operation.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.operation.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -187,8 +186,8 @@ class MainWindow(object):
         spacerItem6 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem6)
         self.btn_origin = QtWidgets.QPushButton(self.operation)
-        self.btn_origin.setMinimumSize(QtCore.QSize(200, 0))
-        self.btn_origin.setMaximumSize(QtCore.QSize(200, 16777215))
+        self.btn_origin.setMinimumSize(QtCore.QSize(80, 0))
+        self.btn_origin.setMaximumSize(QtCore.QSize(80, 16777215))
         self.btn_origin.setObjectName("btn_origin")
         self.horizontalLayout_3.addWidget(self.btn_origin)
         self.btn_origin.setStyleSheet('''
@@ -227,43 +226,50 @@ class MainWindow(object):
 
         self.frame_5 = QtWidgets.QFrame(self.centralwidget)
         self.frame_5.setGeometry(QtCore.QRect(880, 60, 150, 704))
-        self.frame_5.setMinimumSize(QtCore.QSize(150, 0))
-        self.frame_5.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.frame_5.setMinimumSize(QtCore.QSize(180, 0))
+        self.frame_5.setMaximumSize(QtCore.QSize(180, 16777215))
         self.frame_5.setStyleSheet("background: rgb(51, 51, 51)")
         self.frame_5.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_5.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_5.setObjectName("frame_5")
         self.frame_6 = QtWidgets.QFrame(self.frame_5)
-        self.frame_6.setGeometry(QtCore.QRect(10, 10, 135, 670))
-        self.frame_6.setMinimumSize(QtCore.QSize(135, 670))
-        self.frame_6.setMaximumSize(QtCore.QSize(135, 670))
+        self.frame_6.setGeometry(QtCore.QRect(10, 10, 160, 670))
+        self.frame_6.setMinimumSize(QtCore.QSize(160, 670))
+        self.frame_6.setMaximumSize(QtCore.QSize(160, 670))
         self.frame_6.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_6.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_6.setObjectName("frame_6")
+        self.frame_6.setStyleSheet('''
+        QFrame {
+            border-width: 1px;
+            border-style: solid;
+            border-color: #555555;
+        };
+        ''')
         self.btn_contrast = QtWidgets.QPushButton(self.frame_6)
-        self.btn_contrast.setGeometry(QtCore.QRect(7, 45, 120, 35))
+        self.btn_contrast.setGeometry(QtCore.QRect(20, 320, 120, 35))
         self.btn_contrast.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_contrast.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_contrast.setObjectName("btn_contrast")
         self.btn_contrast.setStyleSheet('''
-                                                    QPushButton {
-                                                        background-color: #3a3a3a;
-                                                        color: #fff;
-                                                    }
-                                                ''')
+        QPushButton {
+            background-color: #3a3a3a;
+            color: #fff;
+        }
+        ''')
         self.btn_lol = QtWidgets.QPushButton(self.frame_6)
-        self.btn_lol.setGeometry(QtCore.QRect(7, 100, 120, 35))
+        self.btn_lol.setGeometry(QtCore.QRect(20, 375, 120, 35))
         self.btn_lol.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_lol.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_lol.setObjectName("btn_lol")
         self.btn_lol.setStyleSheet('''
-                                                            QPushButton {
+        QPushButton {
                                                                 background-color: #3a3a3a;
                                                                 color: #fff;
                                                             }
                                                         ''')
         self.btn_sr = QtWidgets.QPushButton(self.frame_6)
-        self.btn_sr.setGeometry(QtCore.QRect(7, 265, 120, 35))
+        self.btn_sr.setGeometry(QtCore.QRect(20, 430, 120, 35))
         self.btn_sr.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_sr.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_sr.setObjectName("btn_sr")
@@ -274,7 +280,7 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.btn_denoise = QtWidgets.QPushButton(self.frame_6)
-        self.btn_denoise.setGeometry(QtCore.QRect(7, 155, 120, 35))
+        self.btn_denoise.setGeometry(QtCore.QRect(20, 45, 120, 35))
         self.btn_denoise.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_denoise.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_denoise.setObjectName("btn_denoise")
@@ -285,7 +291,7 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.btn_deblur = QtWidgets.QPushButton(self.frame_6)
-        self.btn_deblur.setGeometry(QtCore.QRect(7, 210, 120, 35))
+        self.btn_deblur.setGeometry(QtCore.QRect(20, 100, 120, 35))
         self.btn_deblur.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_deblur.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_deblur.setObjectName("btn_deblur")
@@ -296,7 +302,7 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.btn_dehaze = QtWidgets.QPushButton(self.frame_6)
-        self.btn_dehaze.setGeometry(QtCore.QRect(7, 320, 120, 35))
+        self.btn_dehaze.setGeometry(QtCore.QRect(20, 155, 120, 35))
         self.btn_dehaze.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_dehaze.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_dehaze.setObjectName("btn_dehaze")
@@ -307,7 +313,7 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.btn_derain = QtWidgets.QPushButton(self.frame_6)
-        self.btn_derain.setGeometry(QtCore.QRect(7, 375, 120, 35))
+        self.btn_derain.setGeometry(QtCore.QRect(20, 210, 120, 35))
         self.btn_derain.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_derain.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_derain.setObjectName("btn_derain")
@@ -318,7 +324,7 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.btn_inpainting = QtWidgets.QPushButton(self.frame_6)
-        self.btn_inpainting.setGeometry(QtCore.QRect(7, 430, 120, 35))
+        self.btn_inpainting.setGeometry(QtCore.QRect(20, 265, 120, 35))
         self.btn_inpainting.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_inpainting.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_inpainting.setObjectName("btn_inpainting")
@@ -329,14 +335,19 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.frame = QtWidgets.QFrame(self.frame_6)
-        self.frame.setGeometry(QtCore.QRect(0, 490, 140, 5))
-        self.frame.setMinimumSize(QtCore.QSize(140, 5))
+        self.frame.setGeometry(QtCore.QRect(0, 490, 180, 5))
+        self.frame.setMinimumSize(QtCore.QSize(180, 5))
         self.frame.setMaximumSize(QtCore.QSize(16777215, 5))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
+        self.frame.setStyleSheet('''
+        QFrame {
+            background-color: #555555;
+        }
+        ''')
         self.btn_rotate = QtWidgets.QPushButton(self.frame_6)
-        self.btn_rotate.setGeometry(QtCore.QRect(7, 550, 120, 35))
+        self.btn_rotate.setGeometry(QtCore.QRect(20, 550, 120, 35))
         self.btn_rotate.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_rotate.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_rotate.setObjectName("btn_rotate")
@@ -347,7 +358,7 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.btn_mirror = QtWidgets.QPushButton(self.frame_6)
-        self.btn_mirror.setGeometry(QtCore.QRect(7, 610, 120, 35))
+        self.btn_mirror.setGeometry(QtCore.QRect(20, 610, 120, 35))
         self.btn_mirror.setMinimumSize(QtCore.QSize(120, 35))
         self.btn_mirror.setMaximumSize(QtCore.QSize(120, 35))
         self.btn_mirror.setObjectName("btn_mirror")
@@ -358,25 +369,27 @@ class MainWindow(object):
                                                             }
                                                         ''')
         self.label = QtWidgets.QLabel(self.frame_6)
-        self.label.setGeometry(QtCore.QRect(10, 510, 120, 16))
+        self.label.setGeometry(QtCore.QRect(35, 510, 120, 16))
         self.label.setMinimumSize(QtCore.QSize(120, 0))
         self.label.setMaximumSize(QtCore.QSize(120, 16777215))
         self.label.setObjectName("label")
         self.label.setStyleSheet('''
             QLabel {
                 color: #fff;
+                border-width: 0;
             }
         ''')
         self.label_2 = QtWidgets.QLabel(self.frame_6)
-        self.label_2.setGeometry(QtCore.QRect(10, 10, 120, 16))
+        self.label_2.setGeometry(QtCore.QRect(35, 10, 120, 16))
         self.label_2.setMinimumSize(QtCore.QSize(120, 0))
         self.label_2.setMaximumSize(QtCore.QSize(120, 16777215))
         self.label_2.setObjectName("label_2")
         self.label_2.setStyleSheet('''
-                    QLabel {
-                        color: #fff;
-                    }
-                ''')
+            QLabel {
+                color: #fff;
+                border-width: 0;
+            }
+        ''')
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -395,19 +408,19 @@ class MainWindow(object):
         self.btn_cutting.setText(_translate("MainWindow", "Clip"))
         self.btn_confirm.setText(_translate("MainWindow", "Confirm"))
         self.btn_cancel.setText(_translate("MainWindow", "Cancel"))
-        self.btn_origin.setText(_translate("MainWindow", "Compare with Original Input"))
+        self.btn_origin.setText(_translate("MainWindow", "Compare"))
         self.btn_contrast.setText(_translate("MainWindow", "Contrast Enhance"))
-        self.btn_lol.setText(_translate("MainWindow", "Lowlight Enhance"))
+        self.btn_lol.setText(_translate("MainWindow", "Lightness Enhance"))
         self.btn_sr.setText(_translate("MainWindow", "Super Resolution"))
-        self.btn_denoise.setText(_translate("MainWindow", "Denoising"))
-        self.btn_deblur.setText(_translate("MainWindow", "Deblurring"))
+        self.btn_denoise.setText(_translate("MainWindow", "Denoise"))
+        self.btn_deblur.setText(_translate("MainWindow", "Deblur"))
         self.btn_dehaze.setText(_translate("MainWindow", "Dehaze"))
         self.btn_derain.setText(_translate("MainWindow", "Derain"))
-        self.btn_inpainting.setText(_translate("MainWindow", "Inpainting"))
+        self.btn_inpainting.setText(_translate("MainWindow", "Inpaint"))
         self.btn_rotate.setText(_translate("MainWindow", "Rotate"))
         self.btn_mirror.setText(_translate("MainWindow", "Mirror"))
-        self.label.setText(_translate("MainWindow", "Image Adjustments"))
-        self.label_2.setText(_translate("MainWindow", "Basic Modifications"))
+        self.label.setText(_translate("MainWindow", "Basic Enhance"))
+        self.label_2.setText(_translate("MainWindow", "Auto Enhance"))
 
     @QtCore.pyqtSlot()
     def on_btn_open_clicked(self):
@@ -439,9 +452,14 @@ class MainWindow(object):
         else:
             self.btn_undo.setEnabled(False)
 
+        self.clear_button_color()
+        self.btn_open.setStyleSheet('''
+        QPushButton {
+            color: #ffd700
+        }
+        ''')
 
     def showImage(self, img, is_grayscale=False):
-        print("show")
         x = img.shape[1]  # get image shape
         y = img.shape[0]
         self.zoomscale = 1  # image zoom scale
@@ -475,10 +493,14 @@ class MainWindow(object):
         img_path, img_type = QFileDialog.getSaveFileName(self, "Save Image", self.__original_img_path, "*" + ext_name)
         if (img_path != "" and img_type != ""):
             pixmap = self.img_panel.pixmap()
-            # pixmap = self.background_pixmap
             pixmap.save(img_path)
-            # self.background_pixmap.save(img_path)
-            # cv2.imwrite(img_path + '.png', self.__current_img)
+
+        self.clear_button_color()
+        self.btn_save.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
 
     @QtCore.pyqtSlot()
     def on_btn_contrast_clicked(self):
@@ -504,6 +526,13 @@ class MainWindow(object):
             self.btn_undo.setEnabled(True)
             self.btn_redo.setEnabled(False)
 
+            self.clear_button_color()
+            self.btn_contrast.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
+
     @QtCore.pyqtSlot()
     def on_btn_lol_clicked(self):
         """
@@ -528,6 +557,14 @@ class MainWindow(object):
             self.btn_undo.setEnabled(True)
             self.btn_redo.setEnabled(False)
 
+            self.clear_button_color()
+            self.btn_lol.setStyleSheet('''
+                    QPushButton {
+                        color: #ffd700
+                    }
+                    ''')
+
+
     @QtCore.pyqtSlot()
     def on_btn_denoise_clicked(self):
         """
@@ -542,6 +579,13 @@ class MainWindow(object):
         self.btn_undo.setEnabled(True)
         self.btn_redo.setEnabled(False)
 
+        self.clear_button_color()
+        self.btn_denoise.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
+
     @QtCore.pyqtSlot()
     def on_btn_deblur_clicked(self):
         """
@@ -555,6 +599,13 @@ class MainWindow(object):
         self.showImage(self.__current_img)
         self.btn_undo.setEnabled(True)
         self.btn_redo.setEnabled(False)
+
+        self.clear_button_color()
+        self.btn_deblur.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
 
     @QtCore.pyqtSlot()
     def on_btn_sr_clicked(self):
@@ -580,6 +631,13 @@ class MainWindow(object):
             self.btn_undo.setEnabled(True)
             self.btn_redo.setEnabled(False)
 
+            self.clear_button_color()
+            self.btn_sr.setStyleSheet('''
+                    QPushButton {
+                        color: #ffd700
+                    }
+                    ''')
+
     @QtCore.pyqtSlot()
     def on_btn_dehaze_clicked(self):
         """
@@ -594,6 +652,13 @@ class MainWindow(object):
         self.btn_undo.setEnabled(True)
         self.btn_redo.setEnabled(False)
 
+        self.clear_button_color()
+        self.btn_dehaze.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
+
     @QtCore.pyqtSlot()
     def on_btn_derain_clicked(self):
         """
@@ -607,6 +672,13 @@ class MainWindow(object):
         self.showImage(self.__current_img)
         self.btn_undo.setEnabled(True)
         self.btn_redo.setEnabled(False)
+
+        self.clear_button_color()
+        self.btn_derain.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
 
     @QtCore.pyqtSlot()
     def on_btn_rotate_clicked(self):
@@ -630,6 +702,13 @@ class MainWindow(object):
             self.btn_undo.setEnabled(True)
             self.btn_redo.setEnabled(False)
 
+            self.clear_button_color()
+            self.btn_rotate.setStyleSheet('''
+                    QPushButton {
+                        color: #ffd700
+                    }
+                    ''')
+
     @QtCore.pyqtSlot()
     def on_btn_mirror_clicked(self):
         if self.__current_img is None:
@@ -650,6 +729,13 @@ class MainWindow(object):
             self.showImage(self.__current_img)
             self.btn_undo.setEnabled(True)
             self.btn_redo.setEnabled(False)
+
+            self.clear_button_color()
+            self.btn_mirror.setStyleSheet('''
+                    QPushButton {
+                        color: #ffd700
+                    }
+                    ''')
 
     @QtCore.pyqtSlot()
     def on_btn_origin_pressed(self):
@@ -683,7 +769,6 @@ class MainWindow(object):
         if self.__current_operation == "clip":
             x_start, x_end = self.img_panel.img_x_start, self.img_panel.img_x_end
             y_start, y_end = self.img_panel.img_y_start, self.img_panel.img_y_end
-            print(x_start, x_end, y_start, y_end)
             if (x_start == 0 and x_end == 0 and y_start == 0 and y_end == 0):
                 self.showImage(self.__current_img)
                 self.btn_confirm.setEnabled(False)
@@ -703,6 +788,13 @@ class MainWindow(object):
 
                 self.btn_undo.setEnabled(True)
                 self.btn_redo.setEnabled(False)
+
+                self.clear_button_color()
+                self.btn_cutting.setStyleSheet('''
+                        QPushButton {
+                            color: #ffd700
+                        }
+                        ''')
 
         elif self.__current_operation == "draw_mask":
             qimage = self.img_panel.mask.toImage()
@@ -724,6 +816,13 @@ class MainWindow(object):
 
             self.btn_undo.setEnabled(True)
             self.btn_redo.setEnabled(False)
+
+            self.clear_button_color()
+            self.btn_inpainting.setStyleSheet('''
+                    QPushButton {
+                        color: #ffd700
+                    }
+                    ''')
 
         # refresh params
         self.__current_operation = None
@@ -756,6 +855,13 @@ class MainWindow(object):
         self.btn_redo.setEnabled(True)
         self.showImage(self.__current_img)
 
+        self.clear_button_color()
+        self.btn_undo.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
+
 
     @QtCore.pyqtSlot()
     def on_btn_redo_clicked(self):
@@ -768,6 +874,13 @@ class MainWindow(object):
             self.btn_redo.setEnabled(False)
         self.btn_undo.setEnabled(True)
         self.showImage(self.__current_img)
+
+        self.clear_button_color()
+        self.btn_redo.setStyleSheet('''
+                QPushButton {
+                    color: #ffd700
+                }
+                ''')
 
     @QtCore.pyqtSlot()
     def on_btn_inpainting_clicked(self):
@@ -786,7 +899,82 @@ class MainWindow(object):
         # 新建一个白色背景的mask图片
         self.btn_confirm.setEnabled(True)
         self.btn_cancel.setEnabled(True)
-        # confirm/cancel 以结束绘制，若confirm 保存mask，若cancel 清理界面
+        # confirm/cancel to finish painting，if confirm, inpaint with the mask，if cancel, clear the page
 
-        # 若再次点击open按钮，则视为传入一张mask
 
+    def clear_button_color(self):
+        self.btn_open.setStyleSheet('''
+                QPushButton {
+                    color: #fff
+                }
+                ''')
+        self.btn_save.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_cutting.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_undo.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_redo.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_contrast.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_lol.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_deblur.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_denoise.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_dehaze.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_derain.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_inpainting.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_sr.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_rotate.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')
+        self.btn_mirror.setStyleSheet('''
+                        QPushButton {
+                            color: #fff
+                        }
+                        ''')

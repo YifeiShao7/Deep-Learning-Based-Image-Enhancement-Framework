@@ -67,7 +67,7 @@ class ContrastDialog(QDialog):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.btn_save = QtWidgets.QPushButton(Dialog)
-        self.btn_save.setMaximumSize(QtCore.QSize(150, 40))
+        self.btn_save.setMaximumSize(QtCore.QSize(100, 40))
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_3.addWidget(self.btn_save)
         self.btn_save.setStyleSheet('''
@@ -87,7 +87,7 @@ class ContrastDialog(QDialog):
         Dialog.setWindowTitle(_translate("Dialog", "Contrast Adjustment"))
         self.btn_auto.setText(_translate("Dialog", "Auto Change"))
         self.btn_custom.setText(_translate("Dialog", "Custom Change"))
-        self.btn_save.setText(_translate("Dialog", "Start Processing"))
+        self.btn_save.setText(_translate("Dialog", "Start"))
 
     def get_contrast_result(self):
         # return self.
@@ -159,7 +159,7 @@ class LightDialog(QDialog):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.btn_save = QtWidgets.QPushButton(Dialog)
-        self.btn_save.setMaximumSize(QtCore.QSize(150, 40))
+        self.btn_save.setMaximumSize(QtCore.QSize(100, 40))
         self.btn_save.setObjectName("btn_save")
         self.btn_save.setStyleSheet('''
                     QPushButton {
@@ -179,7 +179,7 @@ class LightDialog(QDialog):
         Dialog.setWindowTitle(_translate("Dialog", "Lightness Adjustment"))
         self.btn_auto.setText(_translate("Dialog", "Auto Change"))
         self.btn_custom.setText(_translate("Dialog", "Custom Change"))
-        self.btn_save.setText(_translate("Dialog", "Start Processing"))
+        self.btn_save.setText(_translate("Dialog", "Start"))
 
     def get_lightness_result(self):
         # return self.
@@ -221,7 +221,7 @@ class SrDialog(QDialog):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.btn_save = QtWidgets.QPushButton(Dialog)
-        self.btn_save.setMaximumSize(QtCore.QSize(150, 40))
+        self.btn_save.setMaximumSize(QtCore.QSize(100, 40))
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_3.addWidget(self.btn_save)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
@@ -236,7 +236,7 @@ class SrDialog(QDialog):
         self.btn_scale2.setText(_translate("Dialog", "scale = 2"))
         self.btn_scale3.setText(_translate("Dialog", "scale = 3"))
         self.btn_scale4.setText(_translate("Dialog", "scale = 4"))
-        self.btn_save.setText(_translate("Dialog", "Start Processing"))
+        self.btn_save.setText(_translate("Dialog", "Start"))
 
 
     def get_sr_result(self):
@@ -283,7 +283,7 @@ class RotateDialog(QDialog):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.btn_save = QtWidgets.QPushButton(Dialog)
-        self.btn_save.setMaximumSize(QtCore.QSize(150, 40))
+        self.btn_save.setMaximumSize(QtCore.QSize(100, 40))
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_3.addWidget(self.btn_save)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
@@ -298,7 +298,7 @@ class RotateDialog(QDialog):
         self.btn_rotate1.setText(_translate("Dialog", "Rotate 90 Clockwise"))
         self.btn_rotate2.setText(_translate("Dialog", "180 degree rotate"))
         self.btn_rotate3.setText(_translate("Dialog", "Rotate 90 Counter-Clockwise"))
-        self.btn_save.setText(_translate("Dialog", "Start Processing"))
+        self.btn_save.setText(_translate("Dialog", "Start"))
 
     def get_rotate_result(self):
         if self.btn_rotate1.isChecked():
@@ -338,7 +338,7 @@ class MirrorDialog(QDialog):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.btn_save = QtWidgets.QPushButton(Dialog)
-        self.btn_save.setMaximumSize(QtCore.QSize(150, 40))
+        self.btn_save.setMaximumSize(QtCore.QSize(100, 40))
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_3.addWidget(self.btn_save)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
@@ -352,7 +352,7 @@ class MirrorDialog(QDialog):
         Dialog.setWindowTitle(_translate("Dialog", "Mirror Adjustment"))
         self.btn_rotate1.setText(_translate("Dialog", "Horizontal Flip"))
         self.btn_rotate2.setText(_translate("Dialog", "Vertical Flip"))
-        self.btn_save.setText(_translate("Dialog", "Start Processing"))
+        self.btn_save.setText(_translate("Dialog", "Start"))
 
     def get_mirror_dir(self):
         if self.btn_rotate1.isChecked():
