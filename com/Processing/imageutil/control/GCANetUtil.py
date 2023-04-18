@@ -19,7 +19,7 @@ def edge_compute(x):
     y /= 4
     return y
 
-def gcanProcess(src_image, task):
+def gcan_process(src_image, task):
     # model config
     if task == 'dehaze':
         model = './GCANetModel/dehaze.pth'

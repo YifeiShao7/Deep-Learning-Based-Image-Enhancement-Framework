@@ -191,7 +191,6 @@ class MRB(nn.Module):
         super(MRB, self).__init__()
 
         self.n_feat, self.height, self.width = n_feat, height, width
-
         self.dau_top = RCB(int(n_feat*chan_factor**0), bias=bias, groups=groups)
         self.dau_mid = RCB(int(n_feat*chan_factor**1), bias=bias, groups=groups)
         self.dau_bot = RCB(int(n_feat*chan_factor**2), bias=bias, groups=groups)
@@ -234,7 +233,6 @@ class MRB(nn.Module):
 
         out = self.conv_out(x_top)
         out = out + x
-
         return out
 
 ##########################################################################
@@ -264,38 +262,24 @@ class MIRNet_v2(nn.Module):
         n_MRB=2,
         height=3,
         width=2,
-        scale=1,
+        # scale=1,
         bias=False,
         task= None
     ):
         super(MIRNet_v2, self).__init__()
-
         kernel_size=3
         self.task = task
-
         self.conv_in = nn.Conv2d(inp_channels, n_feat, kernel_size=3, padding=1, bias=bias)
-
         modules_body = []
-        
         modules_body.append(RRG(n_feat, n_MRB, height, width, chan_factor, bias, groups=1))
         modules_body.append(RRG(n_feat, n_MRB, height, width, chan_factor, bias, groups=2))
         modules_body.append(RRG(n_feat, n_MRB, height, width, chan_factor, bias, groups=4))
         modules_body.append(RRG(n_feat, n_MRB, height, width, chan_factor, bias, groups=4))
-
         self.body = nn.Sequential(*modules_body)
         self.conv_out = nn.Conv2d(n_feat, out_channels, kernel_size=3, padding=1, bias=bias)
-        
-
     def forward(self, inp_img):
         shallow_feats = self.conv_in(inp_img)
         deep_feats = self.body(shallow_feats)
-
-        if self.task == 'defocus_deblurring':
-            deep_feats += shallow_feats
-            out_img = self.conv_out(deep_feats)
-
-        else:
-            out_img = self.conv_out(deep_feats)
-            out_img += inp_img
-
+        out_img = self.conv_out(deep_feats)
+        out_img += inp_img
         return out_img

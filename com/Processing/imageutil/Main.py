@@ -1,7 +1,5 @@
-import sys, os
+import sys
 
-# from com.Processing.imageutil.ui.test import MainWindow
-# from com.Processing.imageutil.ui.version0402 import MainWindow
 from com.Processing.imageutil.ui.version0412 import MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
 

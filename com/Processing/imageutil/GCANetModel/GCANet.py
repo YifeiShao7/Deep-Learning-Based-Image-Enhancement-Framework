@@ -76,7 +76,6 @@ class GCANet(nn.Module):
         self.norm5 = nn.InstanceNorm2d(64, affine=True)
         self.deconv1 = nn.Conv2d(64, out_c, 1)
         self.only_residual = only_residual
-
     def forward(self, x):
         y = F.relu(self.norm1(self.conv1(x)))
         y = F.relu(self.norm2(self.conv2(y)))
@@ -95,8 +94,8 @@ class GCANet(nn.Module):
         y = F.relu(self.norm4(self.deconv3(gated_y)))
         y = F.relu(self.norm5(self.deconv2(y)))
         if self.only_residual:
+            # only show the residual graph
             y = self.deconv1(y)
         else:
             y = F.relu(self.deconv1(y))
-
         return y

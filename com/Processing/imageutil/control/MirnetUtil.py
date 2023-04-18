@@ -49,8 +49,6 @@ def get_weights_and_params(task, params, sr_scale):
         weights = os.path.join('MirnetModel', 'enhancement_fivek.pth')
     elif task == 'super_resolution':
         weights = './MirnetModel/sr_x' + str(sr_scale) + '.pth'
-        print(weights)
-        # weights = os.path.join('MirnetModel', 'sr_x4.pth')
         params['scale'] = sr_scale
     elif task == 'deblurring':
         weights = './MirnetModel/deblurring.pth'
@@ -64,8 +62,8 @@ def mirnet_process(src_img, task, sr_scale=4):
 
     if task == 'deblurring':
         weights, params = get_weights_and_params(task, deblur_params, sr_scale)
-        load_arch = run_path('./MirnetModel/restormer_arch.py')
-        model = load_arch['Restormer'](**params)
+        load_arch = run_path('./MirnetModel/mirnet_v2_deblur_arch.py')
+        model = load_arch['MIRNetv2_deblur'](**params)
         img_multiple_of = 8
     else:
         weights, params = get_weights_and_params(task, default_params, sr_scale)
@@ -80,8 +78,6 @@ def mirnet_process(src_img, task, sr_scale=4):
         device = torch.device('mps')
     else:
         torch.device('cpu')
-    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # device = torch.device('mps')
     model.to(device)
 
     checkpoint = torch.load(weights)
@@ -134,8 +130,8 @@ def mirnet_process(src_img, task, sr_scale=4):
         restored = img_as_ubyte(restored[0])
 
         print("finish")
-        final = save_img(restored)
-        return final
+        output = save_img(restored)
+        return output
 
 
 

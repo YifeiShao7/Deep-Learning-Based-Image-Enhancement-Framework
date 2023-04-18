@@ -3,31 +3,27 @@ from queue import Queue
 import cv2
 
 # queue max_length = 10, index start from
-
 SAVE_DIRECTORY = './control/tempFile/'
-
 
 def add_img(src_img, queue, index):
     # print(index)
     tempQueue = Queue(maxsize=10)
     tempQueue = queue
-
     # define save name
     if tempQueue.qsize() == 0:
         saveIndex = 0
     else:
         match = tempQueue.queue[tempQueue.qsize()-1]
         saveIndex = int(match) + 1
-
     # when the cursor is on the newest one
     if index == 0:
-        # if length < 10, add one item into it
-        # 当没存满的时候，保存图片，然后将图片的saveIndex存到queue中
+        # if length < 10, add one item into it, update the save index
         if tempQueue.qsize() < 9:
             saveName = SAVE_DIRECTORY + 'temp_' + str(saveIndex) + '.png'
             cv2.imwrite(saveName, src_img)
             tempQueue.put(str(saveIndex))
             index = 0
+        #     when the queue is full, remove the earliest image stored in the folder
         elif tempQueue.qsize() == 9:
             #         remove item
             deleteIndex = tempQueue.get()
@@ -35,7 +31,7 @@ def add_img(src_img, queue, index):
             deletePath = SAVE_DIRECTORY + 'temp_' + str(deleteIndex) + '.png'
             os.remove(deletePath)
 
-            #       add item
+            #       add the new one after removal
             saveName = SAVE_DIRECTORY + 'temp_' + str(saveIndex) + '.png'
             cv2.imwrite(saveName, src_img)
             tempQueue.put(str(saveIndex))
@@ -63,18 +59,15 @@ def add_img(src_img, queue, index):
             match = newQueue.queue[newQueue.qsize() - 1]
             saveIndex = int(match) + 1
 
-        print("saveIndex:", saveIndex)
-
         saveName = SAVE_DIRECTORY + 'temp_' + str(saveIndex) + '.png'
         cv2.imwrite(saveName, src_img)
         newQueue.put(str(saveIndex))
 
         index = 0
         tempQueue = newQueue
-    print("size&index:", tempQueue.qsize(), index)
     return tempQueue, index
 
-# 在redo中，index应该要小于queue的长度
+# in redo methods, the index value is less than the length of the queue
 def redo(queue, index):
     tempQueue = Queue(maxsize=10)
     tempQueue = queue
@@ -90,7 +83,7 @@ def redo(queue, index):
 
     return src_img, index
 
-# 在undo中 index应该要大于0
+# in undo methods, the index value is greater than or equal to 0
 def undo(queue, index):
     tempQueue = Queue(maxsize=10)
     tempQueue = queue

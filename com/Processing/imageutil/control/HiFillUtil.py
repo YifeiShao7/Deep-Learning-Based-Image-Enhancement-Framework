@@ -47,7 +47,7 @@ def pre_process(raw_img, raw_mask, multiple):
     small_img = resize_ave(large_img, multiple)
     small_mask = cv2.resize(raw_mask, (INPUT_SIZE, INPUT_SIZE), interpolation = cv2.INTER_NEAREST)
 
-    # set hole region to 1. and backgroun to 0.
+    # set hole region to 1. and background to 0.
     small_mask = 1. - small_mask
     return large_img, large_mask, small_img, small_mask
 
@@ -100,7 +100,7 @@ def inpaint(raw_img,
 
     return res_raw_size
 
-def inpainting_process(src_img, mask_img):
+def inpaint_process(src_img, mask_img):
     with tf.Graph().as_default():
         with open('./HiFillModel/hifill.pb', "rb") as f:
             output_graph_def = tf.compat.v1.GraphDef()
@@ -118,4 +118,3 @@ def inpainting_process(src_img, mask_img):
 
             inpainted = inpaint(src_img, mask_img, sess, inpainted_512_node, attention_node, mask_512_node, image_ph, mask_ph, MULTIPLE)
             return inpainted
-

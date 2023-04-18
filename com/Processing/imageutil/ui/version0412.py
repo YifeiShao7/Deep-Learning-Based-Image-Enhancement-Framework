@@ -16,13 +16,13 @@ from PyQt5.QtCore import Qt, QObject
 from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor, QPainter
 from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \
     QLineEdit, QMessageBox
-from com.Processing.imageutil.control.GCANetUtil import gcanProcess
-from com.Processing.imageutil.ui.CustomLabel import ImageLabel
+from com.Processing.imageutil.control.GCANetUtil import gcan_process
+from com.Processing.imageutil.ui.ImageLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
 from com.Processing.imageutil.control.BasicUtil import *
 from com.Processing.imageutil.control.UndoQueue import *
 from com.Processing.imageutil.ui.CustomDialog import *
-from com.Processing.imageutil.control.HiFillUtil import inpainting_process
+from com.Processing.imageutil.control.HiFillUtil import inpaint_process
 
 class MainWindow(object):
     def setupUi(self, MainWindow):
@@ -40,8 +40,6 @@ class MainWindow(object):
         # self.__last_img = None  # last step of operation
         self.__current_operation = None  # current operation record
         self.__temp_img = None
-
-        self.__origin_count = 1
 
         self.__undoQueue = Queue(maxsize=10)
         self.__undoQueueIndex = 0
@@ -590,7 +588,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = gcanProcess(self.__current_img, "dehaze")
+        self.__current_img = gcan_process(self.__current_img, "dehaze")
         self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
         self.showImage(self.__current_img)
         self.btn_undo.setEnabled(True)
@@ -604,7 +602,7 @@ class MainWindow(object):
         if self.__current_img is None:
             self.__show_warning_message_box("Haven't Select Image")
             return
-        self.__current_img = gcanProcess(self.__current_img, "derain")
+        self.__current_img = gcan_process(self.__current_img, "derain")
         self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
         self.showImage(self.__current_img)
         self.btn_undo.setEnabled(True)
@@ -713,7 +711,7 @@ class MainWindow(object):
             buffer = qimage.bits().asstring(qimage.byteCount())
             array = np.frombuffer(buffer, dtype=np.uint8).reshape(height, width, 4)
             rgb_array = array[:,:,:3]
-            result = inpainting_process(self.__current_img, rgb_array)
+            result = inpaint_process(self.__current_img, rgb_array)
             self.__current_img = result
 
             self.showImage(self.__current_img)
