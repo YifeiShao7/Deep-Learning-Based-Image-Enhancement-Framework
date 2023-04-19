@@ -1,6 +1,6 @@
 import sys, os
-# from com.Processing.imageutil.ui.test import MainWindow
-from com.Processing.imageutil.ui.version0402 import MainWindow
+
+from com.Processing.imageutil.ui.mainUI import MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
 class MyWindow(QMainWindow, MainWindow):
@@ -8,8 +8,8 @@ class MyWindow(QMainWindow, MainWindow):
         super(MyWindow, self).__init__(parent)
         self.setupUi(self)
 
-
 if __name__ == '__main__':
+    print(sys.path)
     try:
         app = QApplication(sys.argv)
         window = MyWindow()

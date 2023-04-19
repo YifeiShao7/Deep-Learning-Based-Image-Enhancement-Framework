@@ -19,7 +19,13 @@ def edge_compute(x):
     y /= 4
     return y
 
-def gcanProcess(src_image, task):
+"""
+process with the gcan model
+:param src_img: original image
+:param task: task to enhance the image: derain / dehaze
+:return changed image with the input task
+"""
+def gcan_process(src_image, task):
     # model config
     if task == 'dehaze':
         model = './GCANetModel/dehaze.pth'

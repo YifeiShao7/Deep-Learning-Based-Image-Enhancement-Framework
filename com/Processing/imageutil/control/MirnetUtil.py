@@ -49,8 +49,6 @@ def get_weights_and_params(task, params, sr_scale):
         weights = os.path.join('MirnetModel', 'enhancement_fivek.pth')
     elif task == 'super_resolution':
         weights = './MirnetModel/sr_x' + str(sr_scale) + '.pth'
-        print(weights)
-        # weights = os.path.join('MirnetModel', 'sr_x4.pth')
         params['scale'] = sr_scale
     elif task == 'deblurring':
         weights = './MirnetModel/deblurring.pth'
@@ -58,14 +56,21 @@ def get_weights_and_params(task, params, sr_scale):
     params['task'] = task
     return weights, params
 
+"""
+process with the mirnet-v2 model
+:param src_img: original image
+:param task: task to enhance the image: derain / dehaze
+:param param: sr_scale the parameter of super resolution operation
+:return changed image with the input task
+"""
 def mirnet_process(src_img, task, sr_scale=4):
     tile_default = None
     tile_overlap_default = 32
 
     if task == 'deblurring':
-        weights, params = get_weights_and_params(task, deblur_params)
-        load_arch = run_path('./MirnetModel/restormer_arch.py')
-        model = load_arch['Restormer'](**params)
+        weights, params = get_weights_and_params(task, deblur_params, sr_scale)
+        load_arch = run_path('./MirnetModel/mirnet_v2_deblur_arch.py')
+        model = load_arch['MIRNetv2_deblur'](**params)
         img_multiple_of = 8
     else:
         weights, params = get_weights_and_params(task, default_params, sr_scale)
@@ -74,8 +79,12 @@ def mirnet_process(src_img, task, sr_scale=4):
         # use for completion
         img_multiple_of = 4
 
-    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    device = torch.device('mps')
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        torch.device('cpu')
     model.to(device)
 
     checkpoint = torch.load(weights)
@@ -127,9 +136,8 @@ def mirnet_process(src_img, task, sr_scale=4):
         restored = restored.permute(0, 2, 3, 1).cpu().detach().numpy()
         restored = img_as_ubyte(restored[0])
 
-        print("finish")
-        final = save_img(restored)
-        return final
+        output = save_img(restored)
+        return output
 
 
 
