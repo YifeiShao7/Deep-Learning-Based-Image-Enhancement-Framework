@@ -15,7 +15,7 @@ import copy
 from PyQt5.QtCore import Qt, QObject
 from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor, QPainter
 from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \
-    QLineEdit, QMessageBox
+    QLineEdit, QMessageBox, QPushButton
 from com.Processing.imageutil.control.GCANetUtil import gcan_process
 from com.Processing.imageutil.ui.ImageLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
@@ -68,6 +68,13 @@ class MainWindow(object):
         self.operation.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.operation.setFrameShadow(QtWidgets.QFrame.Raised)
         self.operation.setObjectName("operation")
+        self.operation.setStyleSheet('''
+            QFrame {
+                border-width: 1px;
+                border-style: solid;
+                border-color: #777777;
+            }
+        ''')
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.operation)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.btn_open = QtWidgets.QPushButton(self.operation)
@@ -241,7 +248,7 @@ class MainWindow(object):
         self.frame_6.setObjectName("frame_6")
         self.frame_6.setStyleSheet('''
         QFrame {
-            border-width: 1px;
+            border-width: 2px;
             border-style: solid;
             border-color: #555555;
         };
@@ -903,78 +910,11 @@ class MainWindow(object):
 
 
     def clear_button_color(self):
-        self.btn_open.setStyleSheet('''
+        btn_list = [self.btn_open, self.btn_save, self.btn_cutting, self.btn_undo, self.btn_redo, self.btn_mirror, self.btn_rotate, self.btn_derain, self.btn_dehaze, self.btn_inpainting, self.btn_sr, self.btn_lol, self.btn_contrast, self.btn_denoise, self.btn_deblur]
+        style_sheet = '''
                 QPushButton {
                     color: #fff
                 }
-                ''')
-        self.btn_save.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_cutting.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_undo.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_redo.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_contrast.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_lol.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_deblur.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_denoise.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_dehaze.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_derain.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_inpainting.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_sr.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_rotate.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
-        self.btn_mirror.setStyleSheet('''
-                        QPushButton {
-                            color: #fff
-                        }
-                        ''')
+                '''
+        for button in btn_list:
+            button.setStyleSheet(style_sheet)
