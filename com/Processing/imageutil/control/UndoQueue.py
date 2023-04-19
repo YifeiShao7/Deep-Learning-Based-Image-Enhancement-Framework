@@ -3,7 +3,7 @@ from queue import Queue
 import cv2
 
 # queue max_length = 10, index start from
-SAVE_DIRECTORY = './control/tempFile/'
+SAVE_DIRECTORY = './tempFile/'
 
 
 """
@@ -123,6 +123,8 @@ clear operation, clean up the tempfile folder and the queue
 :return an empty queue with index value 0
 """
 def clear():
+    if os.path.exists(SAVE_DIRECTORY) == False:
+        os.makedirs(SAVE_DIRECTORY)
     files = os.listdir(SAVE_DIRECTORY)
     for img in files:
         os.remove(SAVE_DIRECTORY + img)

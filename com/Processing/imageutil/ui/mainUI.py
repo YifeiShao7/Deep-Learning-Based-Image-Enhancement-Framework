@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import copy
-
-import cv2
 # Form implementation generated from reading ui file 'version0402.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
@@ -11,7 +8,7 @@ import cv2
 
 from queue import Queue
 from PyQt5 import QtCore, QtGui, QtWidgets
-import copy
+import copy, os
 from PyQt5.QtCore import Qt, QObject
 from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor, QPainter
 from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \

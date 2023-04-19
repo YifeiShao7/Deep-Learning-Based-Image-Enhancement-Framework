@@ -1,6 +1,6 @@
-import sys
+import sys, os
 
-from com.Processing.imageutil.ui.version0412 import MainWindow
+from com.Processing.imageutil.ui.mainUI import MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
 class MyWindow(QMainWindow, MainWindow):
@@ -10,6 +10,7 @@ class MyWindow(QMainWindow, MainWindow):
 
 
 if __name__ == '__main__':
+    print(sys.path)
     try:
         app = QApplication(sys.argv)
         window = MyWindow()
