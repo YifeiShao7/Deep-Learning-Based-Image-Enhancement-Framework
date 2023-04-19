@@ -12,9 +12,9 @@ import copy, os
 from PyQt5.QtCore import Qt, QObject
 from PyQt5.QtGui import QImage, QPixmap, QGuiApplication, QCursor, QColor, QPainter
 from PyQt5.QtWidgets import QFileDialog, QGraphicsPixmapItem, QGraphicsScene, QSlider, QApplication, QInputDialog, \
-    QLineEdit, QMessageBox, QSizePolicy
-from com.Processing.imageutil.control.GCANetUtil import gcanProcess
-from com.Processing.imageutil.ui.CustomLabel import ImageLabel
+    QLineEdit, QMessageBox, QPushButton
+from com.Processing.imageutil.control.GCANetUtil import gcan_process
+from com.Processing.imageutil.ui.ImageLabel import ImageLabel
 from com.Processing.imageutil.control.MirnetUtil import *
 from com.Processing.imageutil.control.BasicUtil import *
 from com.Processing.imageutil.control.UndoQueue import *
@@ -228,16 +228,6 @@ class MainWindow(object):
             }
         ''')
 
-        self.img_panel.mousePressEvent = self.mouse_press_event
-        self.img_panel.mouseMoveEvent = self.mouse_move_event
-        self.img_panel.mouseReleaseEvent = self.mouse_release_event
-
-        # self.img_panel.setAlignment(Qt.AlignCenter)
-        # self.img_panel.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
-        # self.img_panel.setScaledContents(True)
-
-        self.gridLayout_2.addWidget(self.img_panel, 0, 1, 1, 1)
-        self.gridLayout.addWidget(self.frame_4, 0, 0, 1, 1)
         self.frame_5 = QtWidgets.QFrame(self.centralwidget)
         self.frame_5.setGeometry(QtCore.QRect(880, 60, 150, 704))
         self.frame_5.setMinimumSize(QtCore.QSize(180, 0))
@@ -822,10 +812,22 @@ class MainWindow(object):
             self.__current_img = result
 
             self.showImage(self.__current_img)
+            self.img_panel.update()
             self.__undoQueue, self.__undoQueueIndex = add_img(self.__current_img, self.__undoQueue, self.__undoQueueIndex)
-            self.drawMask = 0
+            self.img_panel.flag = 0
+
+            self.btn_confirm.setEnabled(False)
+            self.btn_cancel.setEnabled(False)
+
             self.btn_undo.setEnabled(True)
             self.btn_redo.setEnabled(False)
+
+            self.clear_button_color()
+            self.btn_inpainting.setStyleSheet('''
+                    QPushButton {
+                        color: #ffd700
+                    }
+                    ''')
 
         # refresh params
         self.__current_operation = None
