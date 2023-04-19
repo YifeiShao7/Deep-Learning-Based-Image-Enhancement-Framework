@@ -16,7 +16,6 @@ default_params = {
     'height':3,
     'width':2,
     'bias':False,
-    'scale':1,
     'task': None
 }
 
