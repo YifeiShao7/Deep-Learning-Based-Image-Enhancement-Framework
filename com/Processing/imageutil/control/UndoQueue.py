@@ -5,8 +5,18 @@ import cv2
 # queue max_length = 10, index start from
 SAVE_DIRECTORY = './control/tempFile/'
 
+
+"""
+add an image to the queue
+if the index value is 0, which means the newest image is showed;
+else if the index value is larger than 0, which means undo operation has been used
+if the queue is full, add a new image after remove the earliest image put into the queue
+:param src_img: image need to push into the queue
+:param queue: the queue that store the name of the temp files
+:param index: a pointer points to the showed image in the queue
+:return the updated queue and index
+"""
 def add_img(src_img, queue, index):
-    # print(index)
     tempQueue = Queue(maxsize=10)
     tempQueue = queue
     # define save name
@@ -67,6 +77,12 @@ def add_img(src_img, queue, index):
         tempQueue = newQueue
     return tempQueue, index
 
+"""
+redo operation, pointer points to the backward one
+:param queue: the queue stored all the temp file names
+:param index: index value - 1, 
+:return the image in the next 
+"""
 # in redo methods, the index value is less than the length of the queue
 def redo(queue, index):
     tempQueue = Queue(maxsize=10)
@@ -83,6 +99,12 @@ def redo(queue, index):
 
     return src_img, index
 
+"""
+undo operation, pointer points to the upward one
+:param queue: the queue stored all the temp file names
+:param index: index value + 1, 
+:return the image in the previous
+"""
 # in undo methods, the index value is greater than or equal to 0
 def undo(queue, index):
     tempQueue = Queue(maxsize=10)
@@ -96,6 +118,10 @@ def undo(queue, index):
 
     return src_img, index
 
+"""
+clear operation, clean up the tempfile folder and the queue
+:return an empty queue with index value 0
+"""
 def clear():
     files = os.listdir(SAVE_DIRECTORY)
     for img in files:

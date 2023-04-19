@@ -100,6 +100,12 @@ def inpaint(raw_img,
 
     return res_raw_size
 
+"""
+process with the inpaint model
+:param src_img: original image
+:param mask_img: mask the inpaint area
+:return inpainted image
+"""
 def inpaint_process(src_img, mask_img):
     with tf.Graph().as_default():
         with open('./HiFillModel/hifill.pb', "rb") as f:

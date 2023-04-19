@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import PIL.Image as img
 
 """
 Cutting the image
@@ -88,11 +87,11 @@ def mirror_transfer(src_img, type):
 
 """
 Clip the image to specific size
-:param src_img:
-:param x_start:
-:param x_end:
-:param y_start:
-:param y_end:
+:param src_img: origin image
+:param x_start: x value of the start point
+:param x_end: x value of the end point
+:param y_start: y value of the start point
+:param y_end: y value of the end point
 :return changed image
 """
 def crop_image(src_img, x_start, x_end, y_start, y_end):

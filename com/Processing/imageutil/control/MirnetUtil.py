@@ -56,6 +56,13 @@ def get_weights_and_params(task, params, sr_scale):
     params['task'] = task
     return weights, params
 
+"""
+process with the mirnet-v2 model
+:param src_img: original image
+:param task: task to enhance the image: derain / dehaze
+:param param: sr_scale the parameter of super resolution operation
+:return changed image with the input task
+"""
 def mirnet_process(src_img, task, sr_scale=4):
     tile_default = None
     tile_overlap_default = 32
@@ -129,7 +136,6 @@ def mirnet_process(src_img, task, sr_scale=4):
         restored = restored.permute(0, 2, 3, 1).cpu().detach().numpy()
         restored = img_as_ubyte(restored[0])
 
-        print("finish")
         output = save_img(restored)
         return output
 
