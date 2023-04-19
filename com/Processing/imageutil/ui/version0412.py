@@ -908,6 +908,9 @@ class MainWindow(object):
         self.btn_cancel.setEnabled(True)
         # confirm/cancel to finish painting，if confirm, inpaint with the mask，if cancel, clear the page
 
+    def closeEvent(self, event):
+        clear()
+        event.accept()
 
     def clear_button_color(self):
         btn_list = [self.btn_open, self.btn_save, self.btn_cutting, self.btn_undo, self.btn_redo, self.btn_mirror, self.btn_rotate, self.btn_derain, self.btn_dehaze, self.btn_inpainting, self.btn_sr, self.btn_lol, self.btn_contrast, self.btn_denoise, self.btn_deblur]
